@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Pedalboard</string>
+    <string name="navigation_drawer">Navigation Drawer</string>
+    <string name="tab_quick">Quick</string>
+    <string name="tab_effects">Effects</string>
+    <string name="tab_presets">Presets</string>
+    <string name="tab_recorded">Recorded</string>
+    <string name="tab_drums">Drums</string>
+
+    // to modify further
+    <string name="profile">Profile</string>
+    <string name="search">Search</string>
+    <string name="search_replies">Search replies</string>
+    <string name="reply">Reply</string>
+    <string name="reply_all">Reply All</string>
+
+    // Addition to XXXXX
+    <string name="Close">Close</string>
+
+    <string name="edit">Edit</string>
+    <string name="compose">Compose</string>
+
+    <string name="empty_screen_title">Screen under construction</string>
+    <string name="empty_screen_subtitle">This screen is still under construction. This sample will help you learn about adaptive layouts in Jetpack Compose</string>
+
+    <string name="back_button">Back</string>
+    <string name="more_options_button">More options</string>
+    <string name="messages">Messages</string>
+    <string name="four_hours_ago">4 hrs ago</string>
+</resources>
