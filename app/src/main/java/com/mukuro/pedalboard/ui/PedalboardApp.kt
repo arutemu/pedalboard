@@ -165,11 +165,13 @@ private fun PedalboardNavigationWrapper(
         val scope = rememberCoroutineScope()
         val selectedItem = remember { mutableStateOf(TOP_LEVEL_DESTINATIONS[0]) }*/
 
+        val scope = rememberCoroutineScope()
+
         // TODO check on custom width of PermanentNavigationDrawer: b/232495216
         //Change5 Permanent > Dismis
         //PermanentNavigationDrawer(drawerContent = {
 
-        DismissibleNavigationDrawer(drawerContent = {
+        DismissibleNavigationDrawer(gesturesEnabled = false, drawerContent = {
             // Change 5+
             DismissibleNavigationDrawerContent(
                 selectedDestination = selectedDestination,
@@ -194,6 +196,7 @@ private fun PedalboardNavigationWrapper(
                 navigateToDetail = navigateToDetail,
                 toggleSelectedPlugin = toggleSelectedPlugin
             )
+
         }
     } /*else {
         ModalNavigationDrawer(
