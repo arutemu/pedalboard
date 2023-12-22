@@ -10,6 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.DismissibleNavigationDrawer
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -161,6 +162,7 @@ private fun PedalboardNavigationWrapper(
     // Change 3
     //if (navigationType == ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER) {
     if (navigationType == PedalboardNavigationType.DISMISSABLE_NAVIGATION_DRAWER) {
+        val drawerState = drawerState//rememberDrawerState(DrawerValue.Open)
         /*val drawerState = rememberDrawerState(DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         val selectedItem = remember { mutableStateOf(TOP_LEVEL_DESTINATIONS[0]) }*/
@@ -171,7 +173,8 @@ private fun PedalboardNavigationWrapper(
         //Change5 Permanent > Dismis
         //PermanentNavigationDrawer(drawerContent = {
 
-        DismissibleNavigationDrawer(gesturesEnabled = false, drawerContent = {
+        // You can change NawDrawer gesture here
+        DismissibleNavigationDrawer(drawerState = drawerState, drawerContent = {
             // Change 5+
             DismissibleNavigationDrawerContent(
                 selectedDestination = selectedDestination,
@@ -194,7 +197,19 @@ private fun PedalboardNavigationWrapper(
                 navigateToTopLevelDestination = navigationActions::navigateTo,
                 closeDetailScreen = closeDetailScreen,
                 navigateToDetail = navigateToDetail,
-                toggleSelectedPlugin = toggleSelectedPlugin
+                toggleSelectedPlugin = toggleSelectedPlugin,
+                onDrawerClicked =  {
+                    if (drawerState.isOpen) {
+                        scope.launch {
+                            drawerState.close()
+                        }
+                    }
+                    else {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    }
+                }
             )
 
         }
