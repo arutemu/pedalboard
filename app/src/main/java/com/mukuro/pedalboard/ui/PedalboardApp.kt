@@ -1,10 +1,20 @@
 package com.mukuro.pedalboard.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -16,10 +26,16 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,6 +43,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature    // remove
 import androidx.window.layout.FoldingFeature    // remove
+
+import kotlinx.coroutines.flow.collect
 
 //import com.mukuro.pedalboard.ui.navigation.ModalNavigationDrawerContent
 import com.mukuro.pedalboard.ui.navigation.PedalboardBottomNavigationBar
@@ -150,6 +168,7 @@ private fun PedalboardNavigationWrapper(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val isNavigationRailVisible = remember { mutableStateOf(true) }
 
     val navController = rememberNavController()
     val navigationActions = remember(navController) {
@@ -159,15 +178,26 @@ private fun PedalboardNavigationWrapper(
     val selectedDestination =
         navBackStackEntry?.destination?.route ?: PedalboardRoute.QUICK
 
+
+    // TODO - move NavRail here
+    /*    PedalboardNavigationRail(
+            selectedDestination = selectedDestination,
+            navigationContentPosition = navigationContentPosition,
+            navigateToTopLevelDestination = navigateToTopLevelDestination,
+            onDrawerClicked = onDrawerClicked
+        )*/
+
+
+
     // Change 3
     //if (navigationType == ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER) {
     if (navigationType == PedalboardNavigationType.DISMISSABLE_NAVIGATION_DRAWER) {
-        val drawerState = drawerState//rememberDrawerState(DrawerValue.Open)
+        //val drawerState = drawerState//rememberDrawerState(DrawerValue.Open)
         /*val drawerState = rememberDrawerState(DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         val selectedItem = remember { mutableStateOf(TOP_LEVEL_DESTINATIONS[0]) }*/
 
-        val scope = rememberCoroutineScope()
+        //val scope = rememberCoroutineScope()
 
         // TODO check on custom width of PermanentNavigationDrawer: b/232495216
         //Change5 Permanent > Dismis
@@ -176,6 +206,16 @@ private fun PedalboardNavigationWrapper(
         // You can change NawDrawer gesture here
         DismissibleNavigationDrawer(drawerState = drawerState, drawerContent = {
             // Change 5+
+
+            // TODO - move NavRail here
+
+/*                PedalboardNavigationRail(
+                    selectedDestination = selectedDestination,
+                    navigationContentPosition = navigationContentPosition,
+                    navigateToTopLevelDestination = navigateToTopLevelDestination,
+                    onDrawerClicked = onDrawerClicked
+                )*/
+
             DismissibleNavigationDrawerContent(
                 selectedDestination = selectedDestination,
                 navigationContentPosition = navigationContentPosition,
@@ -202,14 +242,19 @@ private fun PedalboardNavigationWrapper(
                     if (drawerState.isOpen) {
                         scope.launch {
                             drawerState.close()
+                            //isNavigationRailVisible.value = true
                         }
                     }
                     else {
                         scope.launch {
                             drawerState.open()
+                            //isNavigationRailVisible.value = false
                         }
                     }
-                }
+                },
+                //isNavigationRailVisible = isNavigationRailVisible.value
+                isNavigationRailVisible = true,//!(drawerState.isOpen || (drawerState.isClosed && drawerState.isAnimationRunning)),//(drawerState.isClosed) || (drawerState.isClosed && drawerState.isAnimationRunning),//drawerState.isAnimationRunning || drawerState.isClosed,
+                drawerState = drawerState
             )
 
         }
@@ -265,18 +310,30 @@ fun PedalboardAppContent(
     closeDetailScreen: () -> Unit,
     navigateToDetail: (Long, PedalboardContentType) -> Unit,
     toggleSelectedPlugin: (Long) -> Unit,
-    onDrawerClicked: () -> Unit = {}
+    onDrawerClicked: () -> Unit = {},
+    isNavigationRailVisible: Boolean,
+    drawerState: DrawerState
 ) {
+    //TEST STRING, feel free to delete
+    val scope = rememberCoroutineScope()
+    //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
     Row(modifier = modifier.fillMaxSize()) {
         //////////////////// Added shit here - second condition, probably not the best idea
-        AnimatedVisibility(visible = navigationType == PedalboardNavigationType.NAVIGATION_RAIL || navigationType == PedalboardNavigationType.DISMISSABLE_NAVIGATION_DRAWER ) {
-            PedalboardNavigationRail(
-                selectedDestination = selectedDestination,
-                navigationContentPosition = navigationContentPosition,
-                navigateToTopLevelDestination = navigateToTopLevelDestination,
-                onDrawerClicked = onDrawerClicked
+        AnimatedVisibility(
+            visible = isNavigationRailVisible,//(drawerState.isClosed) || (drawerState.isClosed && drawerState.isAnimationRunning),
+            enter = expandHorizontally(expandFrom = AbsoluteAlignment.Left),
+            exit = shrinkHorizontally(shrinkTowards = AbsoluteAlignment.Right)
             )
+        {// navigationType == PedalboardNavigationType.NAVIGATION_RAIL || navigationType == PedalboardNavigationType.DISMISSABLE_NAVIGATION_DRAWER ) {
+                            PedalboardNavigationRail(
+                                selectedDestination = selectedDestination,
+                                navigationContentPosition = navigationContentPosition,
+                                navigateToTopLevelDestination = navigateToTopLevelDestination,
+                                onDrawerClicked = onDrawerClicked
+                            )
         }
+        // Possible place to insert the action bar
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -291,14 +348,8 @@ fun PedalboardAppContent(
                 closeDetailScreen = closeDetailScreen,
                 navigateToDetail = navigateToDetail,
                 toggleSelectedPlugin = toggleSelectedPlugin,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f), //.clip(shape = RoundedCornerShape(45.dp,0.dp,0.dp,0.dp))
             )
-            AnimatedVisibility(visible = navigationType == PedalboardNavigationType.BOTTOM_NAVIGATION) {
-                PedalboardBottomNavigationBar(
-                    selectedDestination = selectedDestination,
-                    navigateToTopLevelDestination = navigateToTopLevelDestination
-                )
-            }
         }
     }
 }

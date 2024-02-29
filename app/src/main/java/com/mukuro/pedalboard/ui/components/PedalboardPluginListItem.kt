@@ -67,7 +67,6 @@ import kotlin.math.sin
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 
-
 /* TODO
 *   1 - check comment below > card layout should be reworked fully
 *       a - partially done. but there is an issue with Volume Knob
@@ -134,14 +133,14 @@ fun PedalboardPluginListItem(
             }
 
             // MAIN COLUMN - header + content
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
                 // HEADER
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         //.padding(top = 12.dp)
-                        .background(Color(0x30000000))
+                        .background(MaterialTheme.colorScheme.secondary)
                 ) {
                     Text(
                         text = plugin.name,
@@ -314,6 +313,8 @@ fun VolumeKnob(
         )
     }
 }
+
+
 
 fun getCardImageResource(stringData: String): Int? {
     // Create a mapping between the string values and the corresponding image resources

@@ -37,22 +37,22 @@ object LocalPluginsDataProvider {
         Plugin(
             id = 2L,
             type = PluginType.CHORUS,
-            name = "Nayuta"
+            name = "Nayuta 2"
         ),
         Plugin(
             id = 3L,
             type = PluginType.DISTORTION,
-            name = "Makima"
+            name = "Makima 2"
         ),
         Plugin(
             id = 4L,
             type = PluginType.DELAY,
-            name = "Power"
+            name = "Power 2"
         ),
         Plugin(
             id = 5L,
             type = PluginType.CHORUS,
-            name = "Reze"
+            name = "Reze 2"
         ),
         Plugin(
             id = 6L,

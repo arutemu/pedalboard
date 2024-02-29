@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.window.layout.DisplayFeature
@@ -37,6 +39,7 @@ import com.mukuro.pedalboard.ui.components.PedalboardSearchBar
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
 import com.mukuro.pedalboard.data.Plugin
+import com.mukuro.pedalboard.ui.components.PedalboardTopBar
 import com.mukuro.pedalboard.ui.utils.PedalboardContentType
 import com.mukuro.pedalboard.ui.utils.PedalboardNavigationType
 
@@ -158,8 +161,10 @@ fun PedalboardPluginsList(
 ) {
     // changed from COLUMN to ROW, let's check it
     Column() {
-        PedalboardSearchBar(modifier = Modifier.fillMaxWidth())
-        LazyRow(modifier = modifier.padding(vertical = 10.dp), state = pluginLazyListState) {
+        // Insert Top Bar here? or not here?
+        //PedalboardSearchBar(modifier = Modifier.fillMaxWidth()) // And replace this shit!
+        PedalboardTopBar(modifier = Modifier.fillMaxWidth(), onBackPressed = {})
+        LazyRow(modifier = modifier.clip(shape = RoundedCornerShape(40.dp,0.dp,0.dp,0.dp)).background(MaterialTheme.colorScheme.surfaceVariant).padding(vertical = 10.dp), state = pluginLazyListState) {
 /*        item {
             PedalboardSearchBar(modifier = Modifier.fillMaxWidth())
         }*/

@@ -61,6 +61,7 @@ class PedalboardHomeViewModel(private val pluginsRepository: PluginsRepository =
         )
     }
 
+    // TODO - remove/replace this one
     fun closeDetailScreen() {
         _uiState.value = _uiState
             .value.copy(

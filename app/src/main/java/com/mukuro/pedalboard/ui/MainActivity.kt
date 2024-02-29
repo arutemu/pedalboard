@@ -29,12 +29,11 @@ import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
 import com.mukuro.pedalboard.ui.theme.PedalboardTheme
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 
-
 /*
  TODO - everything
-    1. PluginDetailAppBar
-                 partially done 2. PedalboardPluginThreadItem >>>>>> plugin > threads (LocalPluginsDataProvider)
-                        3. LocalPluginsDataProvider >>> PluginsRepositoryImpl >>> PedalboardHomeViewModel
+    1. PluginDetailAppBar partially done
+    2. PedalboardPluginThreadItem >>>>>> plugin > threads (LocalPluginsDataProvider)
+    3. LocalPluginsDataProvider >>> PluginsRepositoryImpl >>> PedalboardHomeViewModel
 */
 
 
@@ -91,7 +90,7 @@ fun PedalboardAppPreviewTablet() {
     PedalboardTheme {
         PedalboardApp(
             pedalboardHomeUIState = PedalboardHomeUIState(plugins = LocalPluginsDataProvider.allPlugins),
-            windowSize = WindowSizeClass.calculateFromSize(DpSize(700.dp, 500.dp)),
+            windowSize = WindowSizeClass.calculateFromSize(DpSize(1200.dp, 700.dp)),
             displayFeatures = emptyList(),
         )
     }
