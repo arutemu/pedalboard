@@ -72,6 +72,7 @@ fun PedalboardNavigationRail(
 ) {
     NavigationRail(
         modifier = Modifier.fillMaxHeight(),
+        // May insert header  here // header =
         containerColor = MaterialTheme.colorScheme.inverseOnSurface
     ) {
         // TODO remove custom nav rail positioning when NavRail component supports it. ticket : b/232495216

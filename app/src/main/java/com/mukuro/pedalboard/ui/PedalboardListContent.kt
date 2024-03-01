@@ -120,6 +120,83 @@ fun PedalboardQuickScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PedalboardEffectsScreen(
+    contentType: PedalboardContentType,
+    pedalboardHomeUIState: PedalboardHomeUIState,
+    navigationType: PedalboardNavigationType,
+    displayFeatures: List<DisplayFeature>,
+    closeDetailScreen: () -> Unit,
+    navigateToDetail: (Long, PedalboardContentType) -> Unit,
+    toggleSelectedPlugin: (Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    /**
+     * When moving from LIST_AND_DETAIL page to LIST page clear the selection and user should see LIST screen.
+     */
+    LaunchedEffect(key1 = contentType) {
+        if (contentType == PedalboardContentType.SINGLE_PANE && !pedalboardHomeUIState.isDetailOnlyOpen) {
+            closeDetailScreen()
+        }
+    }
+
+    val pluginLazyListState = rememberLazyListState()
+
+    // TODO: Show top app bar over full width of app when in multi-select mode
+
+    if (contentType == PedalboardContentType.DUAL_PANE) {
+        TwoPane(
+            first = {
+                PedalboardPluginsList(
+                    plugins = pedalboardHomeUIState.plugins,
+                    openedPlugin = pedalboardHomeUIState.openedPlugin,
+                    selectedPluginIds = pedalboardHomeUIState.selectedPlugins,
+                    togglePluginSelection = toggleSelectedPlugin,
+                    pluginLazyListState = pluginLazyListState,
+                    navigateToDetail = navigateToDetail
+                )
+            },
+            second = {
+                PedalboardPluginDetail(
+                    plugin = pedalboardHomeUIState.openedPlugin ?: pedalboardHomeUIState.plugins.first(),
+                    isFullScreen = false
+                )
+            },
+            strategy = HorizontalTwoPaneStrategy(splitFraction = 0.5f, gapWidth = 16.dp),
+            displayFeatures = displayFeatures
+        ) ////////// refactored upper part, but it's logic is not working here, should REMOVE or CHANGE
+    } else {
+        Box(modifier = modifier.fillMaxSize()) {
+            PedalboardSinglePaneContent( // not needed???
+                pedalboardHomeUIState = pedalboardHomeUIState,
+                togglePluginSelection = toggleSelectedPlugin,
+                pluginLazyListState = pluginLazyListState,
+                modifier = Modifier.fillMaxSize(),
+                closeDetailScreen = closeDetailScreen,
+                navigateToDetail = navigateToDetail
+            )
+            // When we have bottom navigation we show FAB at the bottom end.
+            if (navigationType == PedalboardNavigationType.BOTTOM_NAVIGATION) {
+                LargeFloatingActionButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp),
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(id = R.string.edit),
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun PedalboardSinglePaneContent(
     pedalboardHomeUIState: PedalboardHomeUIState,
@@ -163,7 +240,7 @@ fun PedalboardPluginsList(
     Column() {
         // Insert Top Bar here? or not here?
         //PedalboardSearchBar(modifier = Modifier.fillMaxWidth()) // And replace this shit!
-        PedalboardTopBar(modifier = Modifier.fillMaxWidth(), onBackPressed = {})
+        //PedalboardTopBar(modifier = Modifier.fillMaxWidth(), onBackPressed = {}) // TODO - remove it from here? probably? Found a better place for it already :3
         LazyRow(modifier = modifier.clip(shape = RoundedCornerShape(40.dp,0.dp,0.dp,0.dp)).background(MaterialTheme.colorScheme.surfaceVariant).padding(vertical = 10.dp), state = pluginLazyListState) {
 /*        item {
             PedalboardSearchBar(modifier = Modifier.fillMaxWidth())
