@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
 import com.mukuro.pedalboard.ui.theme.PedalboardTheme
@@ -43,8 +44,9 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        //enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
+        //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             PedalboardTheme {
                 val windowSize = calculateWindowSizeClass(this)

@@ -1,6 +1,7 @@
 package com.mukuro.pedalboard.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -14,13 +15,29 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.rounded.Circle
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.DismissibleNavigationDrawer
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -31,10 +48,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -43,6 +64,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature    // remove
 import androidx.window.layout.FoldingFeature    // remove
+import com.mukuro.pedalboard.R
+import com.mukuro.pedalboard.ui.components.PedalboardTopBar
 
 import kotlinx.coroutines.flow.collect
 
@@ -339,6 +362,13 @@ fun PedalboardAppContent(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.inverseOnSurface)
         ) {
+
+            /* TODO - try to move Top App bar here
+                also - maybe it should be in NEW PedalboardTopNavHost??
+
+             */
+
+            PedalboardTopBar(onBackPressed = {})
             PedalboardNavHost(
                 navController = navController,
                 contentType = contentType,
@@ -383,7 +413,16 @@ private fun PedalboardNavHost(
             )
         }
         composable(PedalboardRoute.EFFECTS) {
-            EmptyComingSoon()
+            //EmptyComingSoon()
+            PedalboardEffectsScreen(
+                contentType = contentType,
+                pedalboardHomeUIState = pedalboardHomeUIState,
+                navigationType = navigationType,
+                displayFeatures = displayFeatures,
+                closeDetailScreen = closeDetailScreen,
+                navigateToDetail = navigateToDetail,
+                toggleSelectedPlugin = toggleSelectedPlugin
+            )
         }
         composable(PedalboardRoute.PRESETS) {
             EmptyComingSoon()

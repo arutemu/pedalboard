@@ -1,5 +1,6 @@
 package com.mukuro.pedalboard.ui.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -37,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mukuro.pedalboard.R
 import com.mukuro.pedalboard.data.Plugin
@@ -176,7 +179,7 @@ fun PedalboardTopBar(
             }
 
         },
-        navigationIcon = {
+/*        navigationIcon = {
             FilledIconButton(
                 onClick = onBackPressed,
                 modifier = Modifier.padding(8.dp),
@@ -191,11 +194,13 @@ fun PedalboardTopBar(
                     modifier = Modifier.size(14.dp)
                 )
             }
-        },
+        },*/
         actions = {
-            var checked by remember { mutableStateOf(true) }
+            var checked by remember { mutableStateOf(false) }
+            var recChecked by remember { mutableStateOf(false) }
             Text(
                 text = "POWER",
+                fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -214,27 +219,30 @@ fun PedalboardTopBar(
             )
             Text(
                 text = "REC",
+                fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            IconButton(
-                onClick = { /*TODO*/ },
+            IconToggleButton(
+                checked = recChecked,
+                onCheckedChange = { recChecked = it },
             ) {
+                val tint by animateColorAsState(if (recChecked) Color(0xFFEC407A) else Color(0xFFB0BEC5), label = "Rec State") // Nice red color :3
                 Icon(
                     imageVector = Icons.Rounded.Circle,
                     contentDescription = stringResource(id = R.string.more_options_button),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = tint//MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            IconButton(
-                onClick = { /*TODO*/ },
+/*            IconButton(
+                onClick = { *//*TODO*//* },
             ) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = stringResource(id = R.string.more_options_button),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-            }
+            }*/
             IconButton(
                 onClick = { /*TODO*/ },
             ) {
