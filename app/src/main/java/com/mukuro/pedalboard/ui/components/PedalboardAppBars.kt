@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mukuro.pedalboard.R
 import com.mukuro.pedalboard.data.Plugin
@@ -196,6 +197,7 @@ fun PedalboardTopBar(
             var checked by remember { mutableStateOf(true) }
             Text(
                 text = "POWER",
+                fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -214,6 +216,7 @@ fun PedalboardTopBar(
             )
             Text(
                 text = "REC",
+                fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
