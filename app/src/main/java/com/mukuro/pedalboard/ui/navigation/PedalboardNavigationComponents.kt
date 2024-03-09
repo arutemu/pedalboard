@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.widthIn
@@ -50,12 +51,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import com.mukuro.pedalboard.R
@@ -460,6 +467,15 @@ fun CenterAlignedTopAppBar(
     return
 }
 
+fun customShape() =  object : Shape { // testing block for changing width of NavDrawer
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        return Outline.Rectangle(Rect(0f,0f,300f /* width */, 131f /* height */))
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -483,12 +499,13 @@ fun DismissibleNavigationDrawerContent(
 
     // Change 1
     //PermanentDrawerSheet(modifier = Modifier.sizeIn(minWidth = 200.dp, maxWidth = 300.dp)) {
-    DismissibleDrawerSheet() { //// Want to make it smaller, but UI gets fucked then, fix it then add >>> modifier = Modifier.width(300.dp)
+    DismissibleDrawerSheet() { //// Want to make it smaller, but UI gets fucked then, fix it then add >>> modifier = Modifier.requiredWidth(300.dp)
         // TODO remove custom nav drawer content positioning when NavDrawer component supports it. ticket : b/232495216
         Layout(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.inverseOnSurface)
                 .padding(16.dp),
+                //.requiredWidth(300.dp),
             content = {
                 Column(
                     modifier = Modifier.layoutId(LayoutType.HEADER),

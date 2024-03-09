@@ -241,7 +241,12 @@ fun PedalboardPluginsList(
         // Insert Top Bar here? or not here?
         //PedalboardSearchBar(modifier = Modifier.fillMaxWidth()) // And replace this shit!
         //PedalboardTopBar(modifier = Modifier.fillMaxWidth(), onBackPressed = {}) // TODO - remove it from here? probably? Found a better place for it already :3
-        LazyRow(modifier = modifier.clip(shape = RoundedCornerShape(40.dp,0.dp,0.dp,0.dp)).background(MaterialTheme.colorScheme.surfaceVariant).padding(vertical = 10.dp), state = pluginLazyListState) {
+        LazyRow(
+            modifier = modifier
+                .clip(shape = RoundedCornerShape(40.dp,0.dp,0.dp,0.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(vertical = 12.dp),
+            state = pluginLazyListState) {
 /*        item {
             PedalboardSearchBar(modifier = Modifier.fillMaxWidth())
         }*/

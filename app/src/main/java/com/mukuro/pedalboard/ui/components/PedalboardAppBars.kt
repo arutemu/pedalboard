@@ -50,7 +50,7 @@ fun PedalboardSearchBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 24.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
+            .padding(top = 16.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
             .background(MaterialTheme.colorScheme.surface, CircleShape),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -61,7 +61,7 @@ fun PedalboardSearchBar(modifier: Modifier = Modifier) {
             tint = MaterialTheme.colorScheme.outline
         )
         Text(
-            text = stringResource(id = R.string.search_replies),
+            text = stringResource(id = R.string.search_plugins),
             modifier = Modifier
                 .weight(1f)
                 .padding(16.dp),

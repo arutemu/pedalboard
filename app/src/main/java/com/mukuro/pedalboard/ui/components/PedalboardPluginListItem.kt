@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +39,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -66,6 +69,15 @@ import kotlin.math.cos
 import kotlin.math.sin
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
+import com.mukuro.pedalboard.data.PluginsRepository
+import com.mukuro.pedalboard.data.PluginsRepositoryImpl
+import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
+import com.mukuro.pedalboard.ui.PedalboardApp
+import com.mukuro.pedalboard.ui.PedalboardHomeUIState
+import com.mukuro.pedalboard.ui.theme.PedalboardTheme
+import com.mukuro.pedalboard.ui.utils.PedalboardContentType
 
 /* TODO
 *   1 - check comment below > card layout should be reworked fully
@@ -91,12 +103,14 @@ fun PedalboardPluginListItem(
 ) {
     Card(
         modifier = modifier
-            .width(360.dp)
+
             //.fillMaxHeight(0.95f)   // need to change it to constrain > found a way tp maintain aspect ratio
+            .aspectRatio(plugin.aspectRatio) //<< may be useful, ALSO can put it after fillMaxHeight() for different result
             .fillMaxHeight()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            //.aspectRatio() << may be useful
-            .semantics { selected = isSelected }
+            //.width(360.dp)
+            .padding(start = 24.dp)
+            .padding(vertical = 12.dp)
+            .semantics { selected = isSelected } // wtf
             .clip(CardDefaults.shape)
 /*            .combinedClickable( // Need to remove this
                 onClick = { navigateToDetail(plugin.id) },
@@ -105,7 +119,7 @@ fun PedalboardPluginListItem(
             .clip(CardDefaults.shape),
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
-            else if (isOpened) MaterialTheme.colorScheme.secondaryContainer
+            else if (isOpened) MaterialTheme.colorScheme.secondaryContainer // WTF
             else MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
@@ -326,6 +340,38 @@ fun getCardImageResource(stringData: String): Int? {
         else -> null
     }
 }
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@Preview(showBackground = false, widthDp = 600, heightDp = 1100)
+@Composable
+fun PedalboardTabletCardPreview() {
+    PedalboardPluginListItem(
+        plugin = LocalPluginsDataProvider.allPlugins[1],
+        navigateToDetail = { /*pluginId ->
+            navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)*/
+        },
+        toggleSelection = {}, //togglePluginSelection,
+        isOpened = true, //openedPlugin?.id == plugin.id,
+        isSelected = false //selectedPluginIds.contains(plugin.id)
+    )
+}
+
+@Preview(showBackground = false, widthDp = 400, heightDp = 600)
+@Composable
+fun PedalboardMobileCardPreview() {
+    PedalboardPluginListItem(
+        plugin = LocalPluginsDataProvider.allPlugins[1],
+        navigateToDetail = { /*pluginId ->
+            navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)*/
+        },
+        toggleSelection = {}, //togglePluginSelection,
+        isOpened = true, //openedPlugin?.id == plugin.id,
+        isSelected = false //selectedPluginIds.contains(plugin.id)
+    )
+}
+
+
+
 
 // some shitty code for palettes
 fun createPaletteAsync(bitmap: Bitmap) {

@@ -14,17 +14,20 @@ object LocalPluginsDataProvider {
         Plugin(
             id = 1L,
             type = PluginType.DELAY,
-            name = "test delay plugin"
+            name = "test delay plugin",
+            aspectRatio = 1.2f
         ),
         Plugin(
             id = 2L,
             type = PluginType.CHORUS,
-            name = "test chorus plugin"
+            name = "test chorus plugin",
+            aspectRatio = 0.6f
         ),
         Plugin(
             id = 3L,
             type = PluginType.DISTORTION,
-            name = "test distortion plugin"
+            name = "test distortion plugin",
+            aspectRatio = 0.6f
         ),
     )
 
@@ -32,47 +35,56 @@ object LocalPluginsDataProvider {
         Plugin(
             id = 1L,
             type = PluginType.DELAY,
-            name = "Test delay"
+            name = "Test delay",
+            aspectRatio = 0.6f
         ),
         Plugin(
             id = 2L,
             type = PluginType.CHORUS,
-            name = "Nayuta 2"
+            name = "Nayuta 2",
+            aspectRatio = 0.4f
         ),
         Plugin(
             id = 3L,
             type = PluginType.DISTORTION,
-            name = "Makima 2"
+            name = "Makima 2",
+            aspectRatio = 0.6f
         ),
         Plugin(
             id = 4L,
             type = PluginType.DELAY,
-            name = "Power 2"
+            name = "Power 2",
+            aspectRatio = 0.8f
         ),
         Plugin(
             id = 5L,
             type = PluginType.CHORUS,
-            name = "Reze 2"
+            name = "Reze 2",
+            aspectRatio = 0.9f
         ),
         Plugin(
             id = 6L,
             type = PluginType.DISTORTION,
-            name = "test distortion plugin"
+            name = "test distortion plugin",
+            aspectRatio = 0.6f
         ),
         Plugin(
             id = 7L,
             type = PluginType.DELAY,
-            name = "test delay plugin"
+            name = "test delay plugin",
+            aspectRatio = 0.6f
         ),
         Plugin(
             id = 8L,
             type = PluginType.CHORUS,
-            name = "test chorus plugin"
+            name = "test chorus plugin",
+            aspectRatio = 0.2f
         ),
         Plugin(
             id = 9L,
             type = PluginType.DISTORTION,
-            name = "test distortion plugin"
+            name = "test distortion plugin",
+            aspectRatio = 0.5f
         )
     )
 
@@ -84,7 +96,8 @@ object LocalPluginsDataProvider {
         return Plugin(
             id = 10L,
             type = PluginType.ALL,
-            name = "new plugin"
+            name = "new plugin",
+            aspectRatio = 0.6f
         )
     }
 
