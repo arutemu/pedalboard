@@ -2,8 +2,10 @@ package com.mukuro.pedalboard.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -244,8 +246,13 @@ fun PedalboardPluginsList(
         LazyRow(
             modifier = modifier
                 .clip(shape = RoundedCornerShape(40.dp,0.dp,0.dp,0.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(vertical = 12.dp),
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+                //.padding(vertical = 12.dp),
+            contentPadding = PaddingValues(
+                start = 20.dp,
+                end = 20.dp
+            ),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
             state = pluginLazyListState) {
 /*        item {
             PedalboardSearchBar(modifier = Modifier.fillMaxWidth())

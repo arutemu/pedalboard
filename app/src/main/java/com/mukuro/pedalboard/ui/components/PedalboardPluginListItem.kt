@@ -104,12 +104,12 @@ fun PedalboardPluginListItem(
     Card(
         modifier = modifier
 
-            //.fillMaxHeight(0.95f)   // need to change it to constrain > found a way tp maintain aspect ratio
+            //.fillMaxHeight(0.95f)   // REMOVE, OR need to change it to constrain > found a way tp maintain aspect ratio
             .aspectRatio(plugin.aspectRatio) //<< may be useful, ALSO can put it after fillMaxHeight() for different result
             .fillMaxHeight()
-            //.width(360.dp)
-            .padding(start = 24.dp)
-            .padding(vertical = 12.dp)
+            //.width(360.dp) // REMOVE or refactor if needed
+            //.padding(start = 12.dp, end = 12.dp)
+            .padding(vertical = 20.dp)
             .semantics { selected = isSelected } // wtf
             .clip(CardDefaults.shape)
 /*            .combinedClickable( // Need to remove this
@@ -125,7 +125,8 @@ fun PedalboardPluginListItem(
     ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
 
-            val imageResource = getCardImageResource(plugin.name)
+            // TODO - part of background image implementation. Waiting for a proper refactor
+            //val imageResource = getCardImageResource(plugin.name)
 
             // TODO - try to get palette from the image
             //val iconBitmap = (imageResource as ImageBitmap) // ERROR HERE > CRASHES THE APP
@@ -133,8 +134,11 @@ fun PedalboardPluginListItem(
             /*            val palette = rememberDominantColorPalette(iconBitmap)
                         val dominantColor = palette.dominantSwatch?.rgb as? Color ?: Color.White*/
 
-            // BACKGROUND IMAGE
-            if (imageResource != null) {
+            /*TODO -
+                BACKGROUND IMAGE implementation is here. However, currently it's anything but smooth
+                So commented for now until a proper refactor.
+             */
+/*            if (imageResource != null) {
 
                 Image(
                     painter = painterResource(id = imageResource),
@@ -144,7 +148,7 @@ fun PedalboardPluginListItem(
                         .padding(16.dp)
                         .scale(1.8f, 1.8f)
                 )
-            }
+            }*/
 
             // MAIN COLUMN - header + content
             Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
@@ -330,7 +334,7 @@ fun VolumeKnob(
 
 
 
-fun getCardImageResource(stringData: String): Int? {
+/*fun getCardImageResource(stringData: String): Int? {
     // Create a mapping between the string values and the corresponding image resources
     return when (stringData) {
         "Nayuta" -> R.drawable.nayuta
@@ -339,7 +343,7 @@ fun getCardImageResource(stringData: String): Int? {
         "Power" -> R.drawable.power
         else -> null
     }
-}
+}*/
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(showBackground = false, widthDp = 600, heightDp = 1100)
