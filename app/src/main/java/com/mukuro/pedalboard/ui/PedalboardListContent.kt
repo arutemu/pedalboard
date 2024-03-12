@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn // remove and replace with ROW
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -36,12 +34,10 @@ import com.mukuro.pedalboard.R
 
 import com.mukuro.pedalboard.ui.components.ReplyEmailThreadItem*/
 import com.mukuro.pedalboard.ui.components.PluginDetailAppBar
-import com.mukuro.pedalboard.ui.components.PedalboardPluginListItem
-import com.mukuro.pedalboard.ui.components.PedalboardSearchBar
+import com.mukuro.pedalboard.ui.components.PedalboardPluginCard
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
 import com.mukuro.pedalboard.data.Plugin
-import com.mukuro.pedalboard.ui.components.PedalboardTopBar
 import com.mukuro.pedalboard.ui.utils.PedalboardContentType
 import com.mukuro.pedalboard.ui.utils.PedalboardNavigationType
 
@@ -258,7 +254,7 @@ fun PedalboardPluginsList(
             PedalboardSearchBar(modifier = Modifier.fillMaxWidth())
         }*/
             items(items = plugins, key = { it.id }) { plugin ->
-                PedalboardPluginListItem(
+                PedalboardPluginCard(
                     plugin = plugin,
                     navigateToDetail = { pluginId ->
                         navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)
