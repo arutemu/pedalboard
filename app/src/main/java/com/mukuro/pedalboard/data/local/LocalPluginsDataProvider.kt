@@ -1,7 +1,7 @@
 package com.mukuro.pedalboard.data.local
 
-import com.mukuro.pedalboard.R
 import com.mukuro.pedalboard.data.Knob
+import com.mukuro.pedalboard.data.PluginElement
 import com.mukuro.pedalboard.data.Plugin
 import com.mukuro.pedalboard.data.PluginType
 

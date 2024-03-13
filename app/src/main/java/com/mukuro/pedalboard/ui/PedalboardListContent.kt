@@ -241,12 +241,12 @@ fun PedalboardPluginsList(
         //PedalboardTopBar(modifier = Modifier.fillMaxWidth(), onBackPressed = {}) // TODO - remove it from here? probably? Found a better place for it already :3
         LazyRow(
             modifier = modifier
-                .clip(shape = RoundedCornerShape(40.dp,0.dp,0.dp,0.dp))
+                .clip(shape = RoundedCornerShape(36.dp,0.dp,0.dp,0.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant),
                 //.padding(vertical = 12.dp),
             contentPadding = PaddingValues(
-                start = 20.dp,
-                end = 20.dp
+                start = 24.dp,
+                end = 24.dp
             ),
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             state = pluginLazyListState) {

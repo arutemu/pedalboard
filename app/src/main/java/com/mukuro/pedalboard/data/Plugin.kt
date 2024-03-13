@@ -8,5 +8,5 @@ data class Plugin(
     val type: PluginType = PluginType.ALL,
     val name: String,
     val aspectRatio: Float,
-    val elements: List<Knob?>
+    val elements: List<PluginElement?>
 )

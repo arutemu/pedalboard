@@ -4,6 +4,7 @@ package com.mukuro.pedalboard.ui.components
 
 // for background
 // for palette
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,7 +43,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
@@ -56,6 +61,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 import androidx.compose.ui.tooling.preview.Preview
 import com.mukuro.pedalboard.data.Knob
+import com.mukuro.pedalboard.data.PluginElement
+import com.mukuro.pedalboard.data.RangeSlider
+import com.mukuro.pedalboard.data.Slider
+import com.mukuro.pedalboard.data.Switch
 import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
 
 /* TODO
@@ -234,18 +243,27 @@ fun PedalboardPluginCard(
                      */
                     plugin.elements.forEach {
                         if (it != null) {
-                            VolumeKnobNew(
-                                it,
-                                knobSize = 100f,
-                                onValueChanged = { value ->
-                                    /* Placeholder code for handling volume change
-                                    * Put here some action if needed in the future.
-                                    * Right now only prints logs on change.
-                                    */
-                                    println(it.name+" changed: $value")},
+                            when (it) {
+                                is Knob -> VolumeKnobNew(
+                                    it,
+                                    knobSize = 100f,
+                                    onValueChanged = { value ->
+                                        /* Placeholder code for handling volume change
+                                        * Put here some action if needed in the future.
+                                        * Right now only prints logs on change.
+                                        */
+                                        println(it.name+" changed: $value")},
 
-                                modifier = Modifier.size(height = 160.dp, width = 120.dp) // Let's settle for this size for now .____.
-                            )
+                                    modifier = Modifier.size(height = 160.dp, width = 120.dp) // Let's settle for this size for now .____.
+                                    )
+                                is Switch -> {}
+                                is Slider -> {}
+                                is RangeSlider -> {}
+
+                                // TODO - add final elements
+                                // is Selector -> {}
+                                // is XXX -> {}
+                            }
                         }
                     }
 
@@ -253,6 +271,21 @@ fun PedalboardPluginCard(
             }
         }
     }
+}
+
+// WTF, there is no built-in lerp function? or am I stupid? (not hehe)
+fun Float.mapRange(
+    fromMin: Float,
+    fromMax: Float,
+    toMin: Float,
+    toMax: Float
+): Float {
+    if (fromMin == fromMax) {
+        throw IllegalArgumentException("Input range cannot have equal min and max values")
+    }
+
+    val clampedValue = this.coerceIn(fromMin, fromMax)
+    return (clampedValue - fromMin) * (toMax - toMin) / (fromMax - fromMin) + toMin
 }
 
 @Composable
@@ -341,11 +374,12 @@ fun VolumeKnobNew( // TODO - rename if is good
     knob: Knob,
     modifier: Modifier = Modifier,
     knobSize: Float = 100f,
-    knobColor: Color = Color.Gray,
-    indicatorColor: Color = Color.Red,
+    knobColor: Color = Color.DarkGray,
+    indicatorColor: Color = Color.Cyan,
     onValueChanged: (Float) -> Unit,
+    value: Float = 0f
 ) {
-    var angle by remember { mutableStateOf(0f) }
+    var angle: Float by remember { mutableStateOf(value) }
 
     Column(
         modifier = modifier.pointerInput(Unit) { // Probably a good idea is to change the gesture to .draggable
@@ -353,12 +387,14 @@ fun VolumeKnobNew( // TODO - rename if is good
                 val dragDistance = change.position - change.previousPosition
                 angle += dragDistance.x / (8 * knobSize)
                 angle = angle.coerceIn(0f, 1f)
-                onValueChanged((angle * 2) - 1) // Map the angle to the range from -1 to 1 ////// is it needed??
+                onValueChanged((angle * 2) - 1) // Map the angle to the range from -1 to 1 ////// is it needed?? cant see it doing anything
+                // LOOOOOOOL ^^^^^^ THIS SHIT WAS WROOOONG // or not.......
             }
         }
     ) {
-        Text( // Current knob value
-            text = (angle * 100).toInt().toString()+knob.measure, // add measure coefficient
+        Text( // Current knob value, TODO - interpolate the value to the range
+            //text = "%.2f".format(angle * 100).toFloat().toString()+knob.measure, // Round Float value to 0.0x
+            text = "%.2f".format(angle.mapRange(0f,1f, knob.startPoint, knob.endPoint)).toFloat().toString()+knob.measure,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally) // would be good to add some outline here like in commented lines
                 .clip(CircleShape)
@@ -375,11 +411,13 @@ fun VolumeKnobNew( // TODO - rename if is good
                 .align(Alignment.CenterHorizontally)
         ) {
             Canvas(
-                modifier = Modifier.fillMaxSize(fraction = 0.6f)// sizeIn(minWidth = 100.dp, minHeight = 100.dp, maxWidth = 120.dp, maxHeight = 120.dp) //.fillMaxSize() //fraction = 0.8f)
+                modifier = Modifier.fillMaxSize(fraction = 0.6f).aspectRatio(1f)// sizeIn(minWidth = 100.dp, minHeight = 100.dp, maxWidth = 120.dp, maxHeight = 120.dp) //.fillMaxSize() //fraction = 0.8f)
             ) {
                 val centerX = size.width / 2
                 val centerY = size.height / 2
                 val radius = size.minDimension / 2 - 8.dp.toPx()
+
+
 
                 // Draw the filled knob circle
                 drawCircle(
@@ -389,19 +427,29 @@ fun VolumeKnobNew( // TODO - rename if is good
                 )
 
                 // Draw the indicator circle
+                // THIS IS STUPID SHIT
                 //val indicatorRadius = radius - 20.dp.toPx()
                 val indicatorRadius = radius * 0.2f
                 val angleOffset = 60 // Offset the angle by 150 degrees to start at 7 and end at 5
-                val angleInDegrees = (angle * 360).coerceIn(0f, 300f)
+                val angleInDegrees = (angle * 360).coerceIn(0f, 300f) // SOMETHING FISHY HERE // MY CODE
                 val indicatorOffsetX = (radius - indicatorRadius) * cos(Math.toRadians(angleInDegrees.toDouble()-angleOffset.toDouble())).toFloat()
                 val indicatorOffsetY = (radius - indicatorRadius) * sin(Math.toRadians(angleInDegrees.toDouble()-angleOffset.toDouble())).toFloat()
                 val indicatorCenterX = centerX - indicatorOffsetX
                 val indicatorCenterY = centerY - indicatorOffsetY // Invert the Y-axis to start from the top
 
+                drawArc(
+                    //modifier = Modifier.defaultMinSize(),
+                    brush = Brush.horizontalGradient(listOf(Color.Blue, Color.Magenta, Color.Red)),
+                    startAngle = 120f,
+                    sweepAngle = angleInDegrees,
+                    useCenter = false,
+                    style = Stroke(width = 6f, cap = StrokeCap.Round)
+                )
+
                 drawCircle(
                     color = indicatorColor,
                     center = Offset(indicatorCenterX, indicatorCenterY),
-                    radius = indicatorRadius * 0.8f
+                    radius = indicatorRadius * 0.5f
                 )
             }
         }
