@@ -1,5 +1,7 @@
 package com.mukuro.pedalboard.data
 
+import androidx.compose.runtime.Immutable
+@Immutable
 open class PluginElement(
     open val id: Long,
     open val name: String

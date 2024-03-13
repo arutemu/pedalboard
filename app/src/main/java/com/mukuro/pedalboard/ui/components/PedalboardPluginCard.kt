@@ -41,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.DrawCacheModifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -122,13 +123,11 @@ fun PedalboardPluginCard(
 
             // TODO - part of background image implementation. Waiting for a proper refactor
             //val imageResource = getCardImageResource(plugin.name)
-
             // TODO - try to get palette from the image
             //val iconBitmap = (imageResource as ImageBitmap) // ERROR HERE > CRASHES THE APP
             //createPaletteAsync(imageResource)
             /*            val palette = rememberDominantColorPalette(iconBitmap)
                         val dominantColor = palette.dominantSwatch?.rgb as? Color ?: Color.White*/
-
             /*TODO -
                 BACKGROUND IMAGE implementation is here. However, currently it's anything but smooth
                 So commented for now until a proper refactor.
@@ -244,7 +243,7 @@ fun PedalboardPluginCard(
                     plugin.elements.forEach {
                         if (it != null) {
                             when (it) {
-                                is Knob -> VolumeKnobNew(
+                                is Knob -> VolumeKnob(
                                     it,
                                     knobSize = 100f,
                                     onValueChanged = { value ->
@@ -253,7 +252,6 @@ fun PedalboardPluginCard(
                                         * Right now only prints logs on change.
                                         */
                                         println(it.name+" changed: $value")},
-
                                     modifier = Modifier.size(height = 160.dp, width = 120.dp) // Let's settle for this size for now .____.
                                     )
                                 is Switch -> {}
@@ -273,7 +271,9 @@ fun PedalboardPluginCard(
     }
 }
 
-// WTF, there is no built-in lerp function? or am I stupid? (not hehe)
+/** Small lerp function, cuz I found no easier way to map value from (0..1) to (min..max)
+ *   WTF, there is no built-in lerp function? or am I stupid? (not hehe)
+ */
 fun Float.mapRange(
     fromMin: Float,
     fromMax: Float,
@@ -289,88 +289,7 @@ fun Float.mapRange(
 }
 
 @Composable
-fun VolumeKnob(
-    modifier: Modifier = Modifier,
-    knobSize: Float = 100f,
-    knobName: String,
-    knobColor: Color = Color.Gray,
-    indicatorColor: Color = Color.Red,
-    onValueChanged: (Float) -> Unit,
-) {
-    var angle by remember { mutableStateOf(0f) }
-
-    Column(
-        modifier = modifier.pointerInput(Unit) {
-            detectDragGestures { change, _ ->
-                val dragDistance = change.position - change.previousPosition
-                angle += dragDistance.x / (8 * knobSize)
-                angle = angle.coerceIn(0f, 1f)
-                onValueChanged((angle * 2) - 1) // Map the angle to the range from -1 to 1 ////// is it needed??
-            }
-        }
-    ) {
-        Text(
-            text = (angle * 100).toInt().toString(),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally) // would be good to add some outline here like in commented lines
-                //.clip(CircleShape)
-                .padding(top = 8.dp),
-                //.wrapContentSize(Alignment.TopCenter, unbounded = false),
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.Medium
-        //, fontSize = 12.sp)
-        )
-
-        Box(
-            modifier = Modifier
-                //.fillMaxWidth(fraction = 0.8f)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Canvas(
-                modifier = Modifier.fillMaxSize(fraction = 0.8f)
-            ) {
-                val centerX = size.width / 2
-                val centerY = size.height / 2
-                val radius = size.minDimension / 2 - 8.dp.toPx()
-
-                // Draw the filled knob circle
-                drawCircle(
-                    color = knobColor,
-                    center = Offset(centerX, centerY),
-                    radius = radius
-                )
-
-                // Draw the indicator circle
-                //val indicatorRadius = radius - 20.dp.toPx()
-                val indicatorRadius = radius * 0.2f
-                val angleOffset = 60 // Offset the angle by 150 degrees to start at 7 and end at 5
-                val angleInDegrees = (angle * 360).coerceIn(0f, 300f)
-                val indicatorOffsetX = (radius - indicatorRadius) * cos(Math.toRadians(angleInDegrees.toDouble()-angleOffset.toDouble())).toFloat()
-                val indicatorOffsetY = (radius - indicatorRadius) * sin(Math.toRadians(angleInDegrees.toDouble()-angleOffset.toDouble())).toFloat()
-                val indicatorCenterX = centerX - indicatorOffsetX
-                val indicatorCenterY = centerY - indicatorOffsetY // Invert the Y-axis to start from the top
-
-                drawCircle(
-                    color = indicatorColor,
-                    center = Offset(indicatorCenterX, indicatorCenterY),
-                    radius = indicatorRadius * 0.8f
-                )
-            }
-        }
-        Text(
-            text = knobName,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 0.dp),
-            //style = TextStyle(color = Color.Black, fontSize = 12.sp, fontWeight = FontWeight.Bold),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.ExtraBold
-        )
-    }
-}
-
-@Composable
-fun VolumeKnobNew( // TODO - rename if is good
+fun VolumeKnob( // TODO - rename if is good
     knob: Knob,
     modifier: Modifier = Modifier,
     knobSize: Float = 100f,
@@ -378,8 +297,9 @@ fun VolumeKnobNew( // TODO - rename if is good
     indicatorColor: Color = Color.Cyan,
     onValueChanged: (Float) -> Unit,
     value: Float = 0f
+    //content: @Composable () -> Unit
 ) {
-    var angle: Float by remember { mutableStateOf(value) }
+    var angle: Float by remember { mutableStateOf(0f) }
 
     Column(
         modifier = modifier.pointerInput(Unit) { // Probably a good idea is to change the gesture to .draggable
@@ -417,8 +337,6 @@ fun VolumeKnobNew( // TODO - rename if is good
                 val centerY = size.height / 2
                 val radius = size.minDimension / 2 - 8.dp.toPx()
 
-
-
                 // Draw the filled knob circle
                 drawCircle(
                     color = knobColor,
@@ -427,7 +345,7 @@ fun VolumeKnobNew( // TODO - rename if is good
                 )
 
                 // Draw the indicator circle
-                // THIS IS STUPID SHIT
+                // THIS IS STUPID SHIT (but somehow it's working... at least partially)
                 //val indicatorRadius = radius - 20.dp.toPx()
                 val indicatorRadius = radius * 0.2f
                 val angleOffset = 60 // Offset the angle by 150 degrees to start at 7 and end at 5
@@ -437,6 +355,7 @@ fun VolumeKnobNew( // TODO - rename if is good
                 val indicatorCenterX = centerX - indicatorOffsetX
                 val indicatorCenterY = centerY - indicatorOffsetY // Invert the Y-axis to start from the top
 
+                // Arc indicator around the Knob
                 drawArc(
                     //modifier = Modifier.defaultMinSize(),
                     brush = Brush.horizontalGradient(listOf(Color.Blue, Color.Magenta, Color.Red)),
@@ -445,7 +364,7 @@ fun VolumeKnobNew( // TODO - rename if is good
                     useCenter = false,
                     style = Stroke(width = 6f, cap = StrokeCap.Round)
                 )
-
+                // Indicator on the Knob
                 drawCircle(
                     color = indicatorColor,
                     center = Offset(indicatorCenterX, indicatorCenterY),
@@ -508,9 +427,10 @@ fun PedalboardMobileCardPreview() {
 @Composable
 fun PedalboardSmallKnobPreview() {
     VolumeKnob(
+        knob = LocalPluginsDataProvider.TestKnob.knobSet1[3],
         modifier = Modifier.size(200.dp),
         knobSize = 200f,
-        knobName = "Gain 2",
+        //knobName = "Gain 2",
         knobColor = Color.LightGray,
         indicatorColor = Color.DarkGray,
         onValueChanged = { value ->
@@ -524,9 +444,10 @@ fun PedalboardSmallKnobPreview() {
 @Composable
 fun PedalboardMediumKnobPreview() {
     VolumeKnob(
+        knob = LocalPluginsDataProvider.TestKnob.knobSet1[1],
         modifier = Modifier.size(400.dp),
         knobSize = 400f,
-        knobName = "Gain 2",
+        //knobName = "Gain 2",
         knobColor = Color.LightGray,
         indicatorColor = Color.DarkGray,
         onValueChanged = { value ->
@@ -540,9 +461,10 @@ fun PedalboardMediumKnobPreview() {
 @Composable
 fun PedalboardBigKnobPreview() {
     VolumeKnob(
+        knob = LocalPluginsDataProvider.TestKnob.knobSet1[2],
         modifier = Modifier.size(600.dp),
         knobSize = 600f,
-        knobName = "Gain 2",
+        //knobName = "Gain 2",
         knobColor = Color.LightGray,
         indicatorColor = Color.DarkGray,
         onValueChanged = { value ->

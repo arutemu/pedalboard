@@ -1,5 +1,5 @@
 package com.mukuro.pedalboard.data.local
 
 enum class PluginElementType {
-    Knob,
+    Knob, Switch, Slider, RangeSlider
 }
