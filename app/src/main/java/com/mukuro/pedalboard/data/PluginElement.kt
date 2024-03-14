@@ -1,6 +1,12 @@
 package com.mukuro.pedalboard.data
 
 import androidx.compose.runtime.Immutable
+
+/**
+ * TODO:
+ * 1 - add selector
+ * 2 - add anything else */
+
 @Immutable
 open class PluginElement(
     open val id: Long,
@@ -35,8 +41,3 @@ data class RangeSlider(
     val endValue: Float,
     val measure: String
 ) : PluginElement(id, name)
-
-/**
- * TODO:
- * 1 - add selector
- * 2 - add anything else */

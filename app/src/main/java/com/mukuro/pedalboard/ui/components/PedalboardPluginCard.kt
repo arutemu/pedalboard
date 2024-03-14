@@ -254,6 +254,7 @@ fun PedalboardPluginCard(
                                         * Right now only prints logs on change.
                                         */
                                         println(it.name+" changed: $value")},
+                                    value = 1f,
                                     modifier = Modifier.size(height = 160.dp, width = 120.dp) // Let's settle for this size for now .____.
                                     )
                                 is Switch -> {}
@@ -275,6 +276,7 @@ fun PedalboardPluginCard(
 
 /** Small lerp function, cuz I found no easier way to map value from (0..1) to (min..max)
  *   WTF, there is no built-in lerp function? or am I stupid? (not hehe)
+ *   TODO - refactor, maybe this additional func is overkill
  */
 fun Float.mapRange(
     fromMin: Float,
@@ -291,17 +293,18 @@ fun Float.mapRange(
 }
 
 @Composable
-fun VolumeKnob( // TODO - rename if is good
+fun VolumeKnob(
     knob: Knob,
     modifier: Modifier = Modifier,
     knobSize: Float = 100f,
     knobColor: Color = Color.DarkGray,
-    indicatorColor: Color = Color.Cyan,
+    indicatorColor: Color = Color.LightGray,
     onValueChanged: (Float) -> Unit,
     value: Float = 0f
-    //content: @Composable () -> Unit
+    //content: @Composable () -> Unit // TODO - probably remove, don't think it may be needed here in the future
 ) {
-    var angle: Float by rememberSaveable { mutableStateOf(0f) }
+    val startPosition : Float = value * ((knob.endPoint - knob.startPoint ) / 360) // TODO fix calculation
+    var angle: Float by rememberSaveable { mutableStateOf(startPosition) }
 
     Column(
         modifier = modifier.pointerInput(Unit) { // Probably a good idea is to change the gesture to .draggable
@@ -359,30 +362,36 @@ fun VolumeKnob( // TODO - rename if is good
                 val indicatorCenterX = centerX - indicatorOffsetX
                 val indicatorCenterY = centerY - indicatorOffsetY // Invert the Y-axis to start from the top
 
-                val pointerLeftX = centerX + (cos(Math.toRadians(240.0)).toFloat() * (radius * 1.28f))
-                val pointerY = centerY - (sin(Math.toRadians(240.0)).toFloat() * (radius * 1.28f))
-                val pointerRightX = centerX - (cos(Math.toRadians(240.0)).toFloat() * (radius * 1.28f))
+                val pointerLeftX = centerX + (cos(Math.toRadians(254.0)).toFloat() * (radius * 1.28f))
+                val pointerY = centerY - (sin(Math.toRadians(254.0)).toFloat() * (radius * 1.28f))
+                val pointerRightX = centerX - (cos(Math.toRadians(254.0)).toFloat() * (radius * 1.28f))
 
+                val colorStops = arrayOf(
+                    0.0f to Color.DarkGray,
+                    0.16f to Color.Red,
+                    0.33f to Color.LightGray,
+                    0.75f to Color.DarkGray
+                )
                 // Left marker
                 drawCircle(
-                    color = Color.Blue,
+                    color = Color.LightGray,
                     center = Offset(pointerLeftX,pointerY),
-                    radius = 5f
+                    radius = 4f
                 )
                 // Right marker
                 drawCircle(
-                    color = Color.Red,
+                    color = Color.LightGray,
                     center = Offset(pointerRightX,pointerY),
-                    radius = 5f
+                    radius = 4f
                 )
 
                 // Arc indicator around the Knob
                 drawArc(
-                    brush = Brush.horizontalGradient(listOf(Color.Blue, Color.Magenta, Color.Red)),
+                    brush = Brush.sweepGradient(colorStops = colorStops), // listOf(Color.LightGray, Color.Magenta, Color.Red),
                     startAngle = 120f,
                     sweepAngle = angleInDegrees,
                     useCenter = false,
-                    style = Stroke(width = 6f, cap = StrokeCap.Round)
+                    style = Stroke(width = 5f, cap = StrokeCap.Round)
                 )
 
                 // Indicator on the Knob
