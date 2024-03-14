@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
@@ -299,7 +301,7 @@ fun VolumeKnob( // TODO - rename if is good
     value: Float = 0f
     //content: @Composable () -> Unit
 ) {
-    var angle: Float by remember { mutableStateOf(0f) }
+    var angle: Float by rememberSaveable { mutableStateOf(0f) }
 
     Column(
         modifier = modifier.pointerInput(Unit) { // Probably a good idea is to change the gesture to .draggable
@@ -331,7 +333,9 @@ fun VolumeKnob( // TODO - rename if is good
                 .align(Alignment.CenterHorizontally)
         ) {
             Canvas(
-                modifier = Modifier.fillMaxSize(fraction = 0.6f).aspectRatio(1f)// sizeIn(minWidth = 100.dp, minHeight = 100.dp, maxWidth = 120.dp, maxHeight = 120.dp) //.fillMaxSize() //fraction = 0.8f)
+                modifier = Modifier
+                    .fillMaxSize(fraction = 0.6f)
+                    .aspectRatio(1f)// sizeIn(minWidth = 100.dp, minHeight = 100.dp, maxWidth = 120.dp, maxHeight = 120.dp) //.fillMaxSize() //fraction = 0.8f)
             ) {
                 val centerX = size.width / 2
                 val centerY = size.height / 2
@@ -355,15 +359,32 @@ fun VolumeKnob( // TODO - rename if is good
                 val indicatorCenterX = centerX - indicatorOffsetX
                 val indicatorCenterY = centerY - indicatorOffsetY // Invert the Y-axis to start from the top
 
+                val pointerLeftX = centerX + (cos(Math.toRadians(240.0)).toFloat() * (radius * 1.28f))
+                val pointerY = centerY - (sin(Math.toRadians(240.0)).toFloat() * (radius * 1.28f))
+                val pointerRightX = centerX - (cos(Math.toRadians(240.0)).toFloat() * (radius * 1.28f))
+
+                // Left marker
+                drawCircle(
+                    color = Color.Blue,
+                    center = Offset(pointerLeftX,pointerY),
+                    radius = 5f
+                )
+                // Right marker
+                drawCircle(
+                    color = Color.Red,
+                    center = Offset(pointerRightX,pointerY),
+                    radius = 5f
+                )
+
                 // Arc indicator around the Knob
                 drawArc(
-                    //modifier = Modifier.defaultMinSize(),
                     brush = Brush.horizontalGradient(listOf(Color.Blue, Color.Magenta, Color.Red)),
                     startAngle = 120f,
                     sweepAngle = angleInDegrees,
                     useCenter = false,
                     style = Stroke(width = 6f, cap = StrokeCap.Round)
                 )
+
                 // Indicator on the Knob
                 drawCircle(
                     color = indicatorColor,
