@@ -20,9 +20,11 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -155,6 +157,7 @@ fun PedalboardPluginCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
+                        //.height(48.dp)
                         .fillMaxWidth()
                         //.padding(top = 12.dp)
                         .background(MaterialTheme.colorScheme.secondary)
@@ -171,7 +174,7 @@ fun PedalboardPluginCard(
                             color = Color.Black,
                             fontSize = 30.sp,
                             fontStyle = FontStyle.Normal,
-                            fontWeight = FontWeight.Bold,
+                            //fontWeight = FontWeight.Bold,
                         )
                     )
                     IconButton( // Icon 1
@@ -229,8 +232,8 @@ fun PedalboardPluginCard(
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center,
+                        .padding(4.dp), // 4-8 is ok
+                    horizontalArrangement = Arrangement.Center, //.spacedBy(4.dp),
                     maxItemsInEachRow = 3
                 )
                 {
@@ -255,7 +258,7 @@ fun PedalboardPluginCard(
                                         */
                                         println(it.name+" changed: $value")},
                                     value = 1f,
-                                    modifier = Modifier.size(height = 160.dp, width = 120.dp) // Let's settle for this size for now .____.
+                                    modifier = Modifier.size(height = 150.dp, width = 120.dp) // Let's settle for this size for now .____.
                                     )
                                 is Switch -> {}
                                 is Slider -> {}
@@ -307,7 +310,7 @@ fun VolumeKnob(
     var angle: Float by rememberSaveable { mutableStateOf(startPosition) }
 
     Column(
-        modifier = modifier.pointerInput(Unit) { // Probably a good idea is to change the gesture to .draggable
+        modifier = modifier.wrapContentSize().pointerInput(Unit) { // Probably a good idea is to change the gesture to .draggable
             detectDragGestures { change, _ ->
                 val dragDistance = change.position - change.previousPosition
                 angle += dragDistance.x / (8 * knobSize)
@@ -317,12 +320,12 @@ fun VolumeKnob(
             }
         }
     ) {
-        Text( // Current knob value, TODO - interpolate the value to the range
+        Text( // Current knob value
             //text = "%.2f".format(angle * 100).toFloat().toString()+knob.measure, // Round Float value to 0.0x
-            text = "%.2f".format(angle.mapRange(0f,1f, knob.startPoint, knob.endPoint)).toFloat().toString()+knob.measure,
+            text = "%.1f".format(angle.mapRange(0f,1f, knob.startPoint, knob.endPoint)).toFloat().toString()+knob.measure,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally) // would be good to add some outline here like in commented lines
-                .clip(CircleShape)
+                //.clip(CircleShape)
                 .padding(top = 4.dp, bottom = 4.dp),
             //.wrapContentSize(Alignment.TopCenter, unbounded = false),
             style = MaterialTheme.typography.titleSmall,

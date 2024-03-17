@@ -88,7 +88,7 @@ fun PluginDetailAppBar(
 ) {
     TopAppBar(
         modifier = modifier,
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.inverseOnSurface
         ),
         title = {
@@ -150,15 +150,17 @@ fun PedalboardTopBar(
 ) {
     TopAppBar(
         modifier = modifier,
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.inverseOnSurface
         ),
         title = {
+                // Image is under the column T__T
 /*            Image(
-                painterResource(id = R.drawable.logo),
+                painterResource(id = R.drawable.pb_logo_placeholder),
                 contentDescription = "Test logo",
                 Modifier.size(60.dp)
             )*/
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
@@ -196,8 +198,8 @@ fun PedalboardTopBar(
             }
         },*/
         actions = {
-            var checked by remember { mutableStateOf(false) }
-            var recChecked by remember { mutableStateOf(false) }
+            var checked: Boolean by remember { mutableStateOf(false) } // TODO - change to rememberSavable if needed
+            var recChecked: Boolean by remember { mutableStateOf(false) }
             Text(
                 text = "POWER",
                 fontWeight = FontWeight.Bold,
