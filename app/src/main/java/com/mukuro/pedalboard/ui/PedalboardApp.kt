@@ -75,6 +75,7 @@ import com.mukuro.pedalboard.ui.navigation.PedalboardBottomNavigationBar
 import com.mukuro.pedalboard.ui.navigation.PedalboardNavigationRail
 
 import com.mukuro.pedalboard.ui.navigation.DismissibleNavigationDrawerContent
+import com.mukuro.pedalboard.ui.navigation.ModalNavigationDrawerContent
 import com.mukuro.pedalboard.ui.navigation.PedalboardNavigationActions
 import com.mukuro.pedalboard.ui.navigation.PedalboardRoute // WIP - needs fixes with icons
 import com.mukuro.pedalboard.ui.navigation.PedalboardTopLevelDestination
@@ -244,8 +245,7 @@ private fun PedalboardNavigationWrapper(
                 selectedDestination = selectedDestination,
                 navigationContentPosition = navigationContentPosition,
                 navigateToTopLevelDestination = navigationActions::navigateTo,
-                /////////////////////
-                drawerState = drawerState//rememberDrawerState(DrawerValue.Open)
+                drawerState = drawerState
 
                 // Need to close it by clicking on icon
             )
@@ -282,7 +282,7 @@ private fun PedalboardNavigationWrapper(
             )
 
         }
-    } /*else {
+    } else {
         ModalNavigationDrawer(
             //gesturesEnabled = false,
             drawerContent = {
@@ -310,14 +310,24 @@ private fun PedalboardNavigationWrapper(
                 navigateToTopLevelDestination = navigationActions::navigateTo,
                 closeDetailScreen = closeDetailScreen,
                 navigateToDetail = navigateToDetail,
-                toggleSelectedEmail = toggleSelectedEmail
-            ) {
-                scope.launch {
-                    drawerState.open()
-                }
-            }
+                toggleSelectedPlugin = toggleSelectedPlugin,
+                onDrawerClicked =  {
+                    if (drawerState.isOpen) {
+                        scope.launch {
+                            drawerState.close()
+                        }
+                    }
+                    else {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    }
+                },
+                isNavigationRailVisible = false,
+                drawerState = drawerState
+            )
         }
-    }*/
+    }
 }
 
 @Composable
@@ -381,6 +391,12 @@ fun PedalboardAppContent(
                 toggleSelectedPlugin = toggleSelectedPlugin,
                 modifier = Modifier.weight(1f), //.clip(shape = RoundedCornerShape(45.dp,0.dp,0.dp,0.dp))
             )
+            AnimatedVisibility(visible = navigationType == PedalboardNavigationType.BOTTOM_NAVIGATION) {
+                PedalboardBottomNavigationBar(
+                    selectedDestination = selectedDestination,
+                    navigateToTopLevelDestination = navigateToTopLevelDestination
+                )
+            }
         }
     }
 }

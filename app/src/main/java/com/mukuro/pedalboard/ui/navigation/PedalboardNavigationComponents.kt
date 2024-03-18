@@ -320,11 +320,11 @@ fun PermanentNavigationDrawerContent(
     }
 }*/
 
-/*@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModalNavigationDrawerContent(
     selectedDestination: String,
-    navigationContentPosition: ReplyNavigationContentPosition,
+    navigationContentPosition: PedalboardNavigationContentPosition,
     navigateToTopLevelDestination: (PedalboardTopLevelDestination) -> Unit,
     onDrawerClicked: () -> Unit = {}
 ) {
@@ -361,7 +361,7 @@ fun ModalNavigationDrawerContent(
                     }
 
                     ExtendedFloatingActionButton(
-                        onClick = { TODO },
+                        onClick = { },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp, bottom = 40.dp),
@@ -437,8 +437,8 @@ fun ModalNavigationDrawerContent(
                     val contentPlaceableY = when (navigationContentPosition) {
                         // Figure out the place we want to place the content, with respect to the
                         // parent (ignoring the header for now)
-                        ReplyNavigationContentPosition.TOP -> 0
-                        ReplyNavigationContentPosition.CENTER -> nonContentVerticalSpace / 2
+                        PedalboardNavigationContentPosition.TOP -> 0
+                        PedalboardNavigationContentPosition.CENTER -> nonContentVerticalSpace / 2
                     }
                         // And finally, make sure we don't overlap with the header.
                         .coerceAtLeast(headerPlaceable.height)
@@ -448,7 +448,7 @@ fun ModalNavigationDrawerContent(
             }
         )
     }
-}*/
+}
 
 // EXPERIMENT HERE
 
