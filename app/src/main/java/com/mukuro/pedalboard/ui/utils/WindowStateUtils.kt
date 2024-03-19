@@ -54,7 +54,7 @@ fun isSeparating(foldFeature: FoldingFeature?): Boolean {
  * Different type of navigation supported by app depending on device size and state.
  */
 enum class PedalboardNavigationType {
-    BOTTOM_NAVIGATION, NAVIGATION_RAIL, PERMANENT_NAVIGATION_DRAWER, DISMISSABLE_NAVIGATION_DRAWER
+    BOTTOM_NAVIGATION, NAVIGATION_RAIL, PERMANENT_NAVIGATION_DRAWER, DISMISSIBLE_NAVIGATION_DRAWER
 }
 
 /**

@@ -242,7 +242,7 @@ fun PedalboardPluginsList(
         LazyRow(
             modifier = modifier
                 .clip(shape = RoundedCornerShape(36.dp,0.dp,0.dp,0.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .background(MaterialTheme.colorScheme.surfaceDim), // color is fucked after libs update
                 //.padding(vertical = 12.dp),
             contentPadding = PaddingValues(
                 start = 24.dp,

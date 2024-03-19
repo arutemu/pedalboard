@@ -66,7 +66,6 @@ import kotlin.math.cos
 import kotlin.math.sin
 import androidx.compose.ui.tooling.preview.Preview
 import com.mukuro.pedalboard.data.Knob
-import com.mukuro.pedalboard.data.PluginElement
 import com.mukuro.pedalboard.data.RangeSlider
 import com.mukuro.pedalboard.data.Slider
 import com.mukuro.pedalboard.data.Switch
@@ -157,7 +156,7 @@ fun PedalboardPluginCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        //.height(48.dp)
+                        .height(48.dp)
                         .fillMaxWidth()
                         //.padding(top = 12.dp)
                         .background(MaterialTheme.colorScheme.secondary)
@@ -180,7 +179,7 @@ fun PedalboardPluginCard(
                     IconButton( // Icon 1
                         onClick = { /*TODO*/ },
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(40.dp)
                             .padding(end = 4.dp)
                         //.align(Alignment.Vertical)
                         //.clip(CircleShape)
@@ -196,7 +195,7 @@ fun PedalboardPluginCard(
                     IconButton( // Icon 2
                         onClick = { /*TODO*/ },
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(40.dp)
                             .padding(end = 4.dp)
                         //.align(Alignment.Vertical)
                         //.clip(CircleShape)
@@ -212,7 +211,7 @@ fun PedalboardPluginCard(
                     IconButton( // Icon 3
                         onClick = { /*TODO*/ },
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(40.dp)
                             .padding(end = 4.dp)
                         //.align(Alignment.Vertical)
                         //.clip(CircleShape)
@@ -359,7 +358,7 @@ fun VolumeKnob(
                 //val indicatorRadius = radius - 20.dp.toPx()
                 val indicatorRadius = radius * 0.2f
                 val angleOffset = 60 // Offset the angle by 150 degrees to start at 7 and end at 5
-                val angleInDegrees = (angle * 360).coerceIn(0f, 300f) // SOMETHING FISHY HERE // MY CODE
+                val angleInDegrees = (angle * 360) / 1.2f //.coerceIn(0f, 300f) // SOMETHING FISHY HERE // MY CODE // FIXED EHHEHEHE :3
                 val indicatorOffsetX = (radius - indicatorRadius) * cos(Math.toRadians(angleInDegrees.toDouble()-angleOffset.toDouble())).toFloat()
                 val indicatorOffsetY = (radius - indicatorRadius) * sin(Math.toRadians(angleInDegrees.toDouble()-angleOffset.toDouble())).toFloat()
                 val indicatorCenterX = centerX - indicatorOffsetX
