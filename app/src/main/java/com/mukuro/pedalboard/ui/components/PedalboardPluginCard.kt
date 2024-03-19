@@ -5,6 +5,7 @@ package com.mukuro.pedalboard.ui.components
 // for background
 // for palette
 import androidx.annotation.FloatRange
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -34,6 +35,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -122,6 +124,8 @@ fun PedalboardPluginCard(
             else MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
+        var turnedOn: Boolean by rememberSaveable { mutableStateOf(true) } // TODO - change to rememberSavable if needed
+
         Box(modifier = Modifier.fillMaxSize()) { // BoxWithConstraints
 
             // TODO - part of background image implementation. Waiting for a proper refactor
@@ -168,35 +172,37 @@ fun PedalboardPluginCard(
                         modifier = Modifier
                             .weight(1f)
                             //.align(Alignment.CenterHorizontally)
-                            .padding(start = 12.dp),
+                            .padding(start = 12.dp, end = 4.dp),
                         style = TextStyle(
-                            color = Color.Black,
-                            fontSize = 30.sp,
+                            color = MaterialTheme.colorScheme.inverseOnSurface,
+                            fontSize = 20.sp,
                             fontStyle = FontStyle.Normal,
                             //fontWeight = FontWeight.Bold,
                         )
                     )
-                    IconButton( // Icon 1
-                        onClick = { /*TODO*/ },
+                    IconToggleButton( // Icon 1
+                        checked = turnedOn,
+                        onCheckedChange = { turnedOn = it },
                         modifier = Modifier
+                            //.aspectRatio(1f)
                             .size(40.dp)
-                            .padding(end = 4.dp)
                         //.align(Alignment.Vertical)
                         //.clip(CircleShape)
                         //.background(MaterialTheme.colorScheme.surface)
                     ) {
+                        val tint by animateColorAsState(if (turnedOn) Color(0xff8cff78) else Color(0xFFEC407A), label = "ON State")
                         Icon(
                             imageVector = Icons.Default.RadioButtonChecked,
                             contentDescription = "Move vertically",
-                            tint = MaterialTheme.colorScheme.outline
+                            tint = tint
                         )
                     }
-                    Spacer(modifier = Modifier.width(4.dp))
+                    //Spacer(modifier = Modifier.width(4.dp))
                     IconButton( // Icon 2
                         onClick = { /*TODO*/ },
                         modifier = Modifier
+                            //.aspectRatio(1f)
                             .size(40.dp)
-                            .padding(end = 4.dp)
                         //.align(Alignment.Vertical)
                         //.clip(CircleShape)
                         //.background(MaterialTheme.colorScheme.surface)
@@ -204,13 +210,14 @@ fun PedalboardPluginCard(
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Favorite",
-                            tint = MaterialTheme.colorScheme.outline
+                            tint = MaterialTheme.colorScheme.inverseOnSurface
                         )
                     }
-                    Spacer(modifier = Modifier.width(4.dp))
+                    //Spacer(modifier = Modifier.width(4.dp))
                     IconButton( // Icon 3
                         onClick = { /*TODO*/ },
                         modifier = Modifier
+                            //.aspectRatio(1f)
                             .size(40.dp)
                             .padding(end = 4.dp)
                         //.align(Alignment.Vertical)
@@ -220,7 +227,7 @@ fun PedalboardPluginCard(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Favorite",
-                            tint = MaterialTheme.colorScheme.outline
+                            tint = MaterialTheme.colorScheme.inverseOnSurface
                         )
                     }
                 }
@@ -309,15 +316,17 @@ fun VolumeKnob(
     var angle: Float by rememberSaveable { mutableStateOf(startPosition) }
 
     Column(
-        modifier = modifier.wrapContentSize().pointerInput(Unit) { // Probably a good idea is to change the gesture to .draggable
-            detectDragGestures { change, _ ->
-                val dragDistance = change.position - change.previousPosition
-                angle += dragDistance.x / (8 * knobSize)
-                angle = angle.coerceIn(0f, 1f)
-                onValueChanged((angle * 2) - 1) // Map the angle to the range from -1 to 1 ////// is it needed?? cant see it doing anything
-                // LOOOOOOOL ^^^^^^ THIS SHIT WAS WROOOONG // or not.......
+        modifier = modifier
+            .wrapContentSize()
+            .pointerInput(Unit) { // Probably a good idea is to change the gesture to .draggable
+                detectDragGestures { change, _ ->
+                    val dragDistance = change.position - change.previousPosition
+                    angle += dragDistance.x / (8 * knobSize)
+                    angle = angle.coerceIn(0f, 1f)
+                    onValueChanged((angle * 2) - 1) // Map the angle to the range from -1 to 1 ////// is it needed?? cant see it doing anything
+                    // LOOOOOOOL ^^^^^^ THIS SHIT WAS WROOOONG // or not.......
+                }
             }
-        }
     ) {
         Text( // Current knob value
             //text = "%.2f".format(angle * 100).toFloat().toString()+knob.measure, // Round Float value to 0.0x
