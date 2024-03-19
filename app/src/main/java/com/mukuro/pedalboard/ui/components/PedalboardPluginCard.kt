@@ -312,7 +312,7 @@ fun VolumeKnob(
     value: Float = 0f
     //content: @Composable () -> Unit // TODO - probably remove, don't think it may be needed here in the future
 ) {
-    val startPosition : Float = value * ((knob.endPoint - knob.startPoint ) / 360) // TODO fix calculation
+    val startPosition : Float = (value * (knob.endPoint - knob.startPoint) / 360) // TODO fix calculation
     var angle: Float by rememberSaveable { mutableStateOf(startPosition) }
 
     Column(
@@ -323,13 +323,11 @@ fun VolumeKnob(
                     val dragDistance = change.position - change.previousPosition
                     angle += dragDistance.x / (8 * knobSize)
                     angle = angle.coerceIn(0f, 1f)
-                    onValueChanged((angle * 2) - 1) // Map the angle to the range from -1 to 1 ////// is it needed?? cant see it doing anything
-                    // LOOOOOOOL ^^^^^^ THIS SHIT WAS WROOOONG // or not.......
+                    onValueChanged((angle * 2) - 1) // Map the angle to the range from -1 to 1
                 }
             }
     ) {
         Text( // Current knob value
-            //text = "%.2f".format(angle * 100).toFloat().toString()+knob.measure, // Round Float value to 0.0x
             text = "%.1f".format(angle.mapRange(0f,1f, knob.startPoint, knob.endPoint)).toFloat().toString()+knob.measure,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally) // would be good to add some outline here like in commented lines
@@ -340,7 +338,6 @@ fun VolumeKnob(
             fontWeight = FontWeight.Medium
             //, fontSize = 12.sp)
         )
-
         Box(
             modifier = Modifier
                 //.fillMaxWidth(fraction = 0.8f)
@@ -364,7 +361,6 @@ fun VolumeKnob(
 
                 // Draw the indicator circle
                 // THIS IS STUPID SHIT (but somehow it's working... at least partially)
-                //val indicatorRadius = radius - 20.dp.toPx()
                 val indicatorRadius = radius * 0.2f
                 val angleOffset = 60 // Offset the angle by 150 degrees to start at 7 and end at 5
                 val angleInDegrees = (angle * 360) / 1.2f //.coerceIn(0f, 300f) // SOMETHING FISHY HERE // MY CODE // FIXED EHHEHEHE :3
@@ -395,7 +391,6 @@ fun VolumeKnob(
                     center = Offset(pointerRightX,pointerY),
                     radius = 4f
                 )
-
                 // Arc indicator around the Knob
                 drawArc(
                     brush = Brush.sweepGradient(colorStops = colorStops), // listOf(Color.LightGray, Color.Magenta, Color.Red),
@@ -404,7 +399,6 @@ fun VolumeKnob(
                     useCenter = false,
                     style = Stroke(width = 5f, cap = StrokeCap.Round)
                 )
-
                 // Indicator on the Knob
                 drawCircle(
                     color = indicatorColor,
