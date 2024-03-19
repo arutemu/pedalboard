@@ -10,7 +10,7 @@
     // to modify further
     <string name="profile">Profile</string>
     <string name="search">Search</string>
-    <string name="search_replies">Search replies</string>
+    <string name="search_plugins">Search plugins</string> // MODIFIED, may be usable
     <string name="reply">Reply</string>
     <string name="reply_all">Reply All</string>
 

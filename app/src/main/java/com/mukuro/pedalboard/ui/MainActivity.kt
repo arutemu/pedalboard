@@ -24,17 +24,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
 import com.mukuro.pedalboard.ui.theme.PedalboardTheme
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 
-
 /*
  TODO - everything
-    1. PluginDetailAppBar
-                 partially done 2. PedalboardPluginThreadItem >>>>>> plugin > threads (LocalPluginsDataProvider)
-                        3. LocalPluginsDataProvider >>> PluginsRepositoryImpl >>> PedalboardHomeViewModel
+    1. PluginDetailAppBar partially done
+    2. PedalboardPluginThreadItem >>>>>> plugin > threads (LocalPluginsDataProvider)
+    3. LocalPluginsDataProvider >>> PluginsRepositoryImpl >>> PedalboardHomeViewModel
 */
 
 
@@ -44,8 +44,9 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        //enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
+        //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             PedalboardTheme {
                 val windowSize = calculateWindowSizeClass(this)
@@ -91,7 +92,7 @@ fun PedalboardAppPreviewTablet() {
     PedalboardTheme {
         PedalboardApp(
             pedalboardHomeUIState = PedalboardHomeUIState(plugins = LocalPluginsDataProvider.allPlugins),
-            windowSize = WindowSizeClass.calculateFromSize(DpSize(700.dp, 500.dp)),
+            windowSize = WindowSizeClass.calculateFromSize(DpSize(1200.dp, 700.dp)),
             displayFeatures = emptyList(),
         )
     }
