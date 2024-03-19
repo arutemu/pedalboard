@@ -239,6 +239,9 @@ fun PedalboardPluginsList(
         // Insert Top Bar here? or not here?
         //PedalboardSearchBar(modifier = Modifier.fillMaxWidth()) // And replace this shit!
         //PedalboardTopBar(modifier = Modifier.fillMaxWidth(), onBackPressed = {}) // TODO - remove it from here? probably? Found a better place for it already :3
+        // For Glide
+        val state = rememberLazyListState()
+
         LazyRow(
             modifier = modifier
                 .clip(shape = RoundedCornerShape(36.dp,0.dp,0.dp,0.dp))
@@ -265,9 +268,19 @@ fun PedalboardPluginsList(
                 )
             }
         }
+
+        // TODO add Glide lazy loader here
+/*        GlideLazyListPreloader(
+            state = state,
+            data = mediaStoreData,
+            size = THUMBNAIL_SIZE,
+            numberOfItemsToPreload = 15,
+            fixedVisibleItemCount = 2,
+        ) { item, requestBuilder ->
+            requestBuilder.load(item.uri).signature(item.signature())
+        }*/
+
     }
-
-
 }
 
 @Composable
