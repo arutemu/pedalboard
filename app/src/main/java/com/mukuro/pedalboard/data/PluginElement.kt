@@ -30,6 +30,8 @@ data class Switch(
 data class Slider(
     override val id: Long,
     override val name: String,
+    val startValue: Float,
+    val endValue: Float,
     val value: Float,
     val measure: String
 ) : PluginElement(id, name)

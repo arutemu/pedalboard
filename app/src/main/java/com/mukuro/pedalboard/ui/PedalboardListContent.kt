@@ -283,17 +283,6 @@ fun PedalboardPluginsList(
             }
         }
 
-        // TODO add Glide lazy loader here
-/*        GlideLazyListPreloader(
-            state = state,
-            data = mediaStoreData,
-            size = THUMBNAIL_SIZE,
-            numberOfItemsToPreload = 15,
-            fixedVisibleItemCount = 2,
-        ) { item, requestBuilder ->
-            requestBuilder.load(item.uri).signature(item.signature())
-        }*/
-
     }
 }
 
