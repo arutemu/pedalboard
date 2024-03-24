@@ -4,9 +4,11 @@ package com.mukuro.pedalboard.ui.components
 
 // for background
 // for palette
+import android.net.Uri
 import androidx.annotation.FloatRange
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -23,10 +25,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
@@ -45,8 +49,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.DrawCacheModifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -55,6 +62,9 @@ import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -67,6 +77,11 @@ import com.mukuro.pedalboard.data.Plugin
 import kotlin.math.cos
 import kotlin.math.sin
 import androidx.compose.ui.tooling.preview.Preview
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import com.mukuro.pedalboard.R
+import com.mukuro.pedalboard.R.drawable.power
+import com.mukuro.pedalboard.R.drawable.reze
 import com.mukuro.pedalboard.data.Knob
 import com.mukuro.pedalboard.data.RangeSlider
 import com.mukuro.pedalboard.data.Slider
@@ -126,7 +141,56 @@ fun PedalboardPluginCard(
     ) {
         var turnedOn: Boolean by rememberSaveable { mutableStateOf(true) } // TODO - change to rememberSavable if needed
 
-        Box(modifier = Modifier.fillMaxSize()) { // BoxWithConstraints
+        // Experimental image corner
+/*        val uri = Uri.parse("android.resource://com.mukuro.pedalboard/" + "R.drawable." + plugin.name.lowercase().replace(" ", "_"))
+        val shortUri = Uri.parse("R.drawable." + plugin.name.lowercase().replace(" ", "_"))
+        // val resId: Int = LocalContext.current.resources.getIdentifier("makima", "drawable", )
+        val drawable = LocalContext.current.getDrawable(R.drawable.makima)*/
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+            // Possible draw_behind implementation
+/*                .drawBehind {
+                    drawIntoCanvas { canvas ->
+                        drawable?.let {
+                            it.setBounds(0, 0, size.width.roundToInt(), size.height.roundToInt())
+                            it.draw(canvas.nativeCanvas)
+                        }
+                    }
+                }*/
+        )
+        { // BoxWithConstraints
+
+            // Native Image element (slow and laggy on scrolling)
+/*            plugin.coverDrawable?.let {
+                Image( // from Coil's AsyncImage
+                    painter = painterResource(id = plugin.coverDrawable),
+                    contentDescription = "cover image",
+                    contentScale = ContentScale.Crop,
+                    alignment = BiasAlignment(0f, -1f),
+                    modifier = Modifier
+                        .fillMaxSize()
+*//*                        .blur(
+                            radiusX = 2.dp,
+                            radiusY = 2.dp,
+                            edgeTreatment = BlurredEdgeTreatment.Unbounded
+                        )*//*
+                        .clip(RoundedCornerShape(8.dp))
+                )
+            }*/
+
+            // Coil Image element
+            plugin.coverDrawable?.let {
+                AsyncImage(
+                    model = plugin.coverDrawable,
+                    contentDescription = "Makima",
+                    contentScale = ContentScale.Crop,
+                    alignment = BiasAlignment(0f, -1f),
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
 
             // TODO - part of background image implementation. Waiting for a proper refactor
             //val imageResource = getCardImageResource(plugin.name)
@@ -155,7 +219,8 @@ fun PedalboardPluginCard(
              * */
             Column(modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)) {
+                //.background(MaterialTheme.colorScheme.background)
+            ) {
                 // HEADER
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -163,6 +228,7 @@ fun PedalboardPluginCard(
                         .height(48.dp)
                         .fillMaxWidth()
                         //.padding(top = 12.dp)
+                        .safeContentPadding()
                         .background(MaterialTheme.colorScheme.secondary)
                 ) {
                     Text(
@@ -219,7 +285,7 @@ fun PedalboardPluginCard(
                         modifier = Modifier
                             //.aspectRatio(1f)
                             .size(40.dp)
-                            .padding(end = 4.dp)
+                            //.padding(end = 4.dp)
                         //.align(Alignment.Vertical)
                         //.clip(CircleShape)
                         //.background(MaterialTheme.colorScheme.surface)
@@ -239,7 +305,7 @@ fun PedalboardPluginCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp), // 4-8 is ok
-                    horizontalArrangement = Arrangement.Center, //.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.Center, //Arrangement.Absolute.SpaceEvenly, //.spacedBy(4.dp),
                     maxItemsInEachRow = 3
                 )
                 {
@@ -439,7 +505,7 @@ fun PedalboardTabletCardPreview() {
             navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)*/
         },
         toggleSelection = {}, //togglePluginSelection,
-        isOpened = true, //openedPlugin?.id == plugin.id,
+        isOpened = false, //openedPlugin?.id == plugin.id,
         isSelected = false //selectedPluginIds.contains(plugin.id)
     )
 }
@@ -453,7 +519,7 @@ fun PedalboardMobileCardPreview() {
             navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)*/
         },
         toggleSelection = {}, //togglePluginSelection,
-        isOpened = true, //openedPlugin?.id == plugin.id,
+        isOpened = false, //openedPlugin?.id == plugin.id,
         isSelected = false //selectedPluginIds.contains(plugin.id)
     )
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="cover_array">
+        <item name="Amptweaker Small Form">Amptweaker Small Form</item>
+        <item name="purple_500">#FF6200EE</item>
+        <item name="purple_700">#FF3700B3</item>
+        <item name="teal_200">#FF03DAC5</item>
+        <item name="teal_700">#FF018786</item>
+        <item name="black">#FF000000</item>
+        <item name="white">#FFFFFFFF</item>
+    </string-array>
+</resources>

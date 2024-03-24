@@ -212,7 +212,7 @@ fun PedalboardTopBar(
                     checked = it
                 },
                 colors = SwitchDefaults.colors( // TODO OFF - default, ON - red
-                    checkedThumbColor = Color.Red, // need better one
+                    checkedThumbColor = Color(0xFFEC407A), // need better one
                     checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
                     uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
                     uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer,

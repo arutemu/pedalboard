@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mukuro.pedalboard.ui.theme.PedalboardTheme*/
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,11 +25,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.adaptive.calculateDisplayFeatures
+import com.mukuro.pedalboard.R
 import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
 import com.mukuro.pedalboard.ui.theme.PedalboardTheme
-import com.google.accompanist.adaptive.calculateDisplayFeatures
+
 
 /*
  TODO - everything
@@ -41,11 +43,15 @@ import com.google.accompanist.adaptive.calculateDisplayFeatures
 class MainActivity : ComponentActivity() {
 
     private val viewModel: PedalboardHomeViewModel by viewModels()
+    private var itemArray: Array<String>? = null
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         //enableEdgeToEdge()
+        itemArray = resources.getStringArray(R.array.cover_array)
+
         super.onCreate(savedInstanceState)
+
         //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             PedalboardTheme {
@@ -70,6 +76,10 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+/*    fun context(): Context {
+        return MainActivity.getApplicationContext()
+    }*/
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)

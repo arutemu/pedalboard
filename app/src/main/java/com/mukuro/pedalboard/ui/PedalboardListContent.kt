@@ -1,6 +1,8 @@
 package com.mukuro.pedalboard.ui
 
+import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,9 +27,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.fontResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.window.layout.DisplayFeature
+import coil.ImageLoader
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.mukuro.pedalboard.R
 /*
 
@@ -234,6 +244,10 @@ fun PedalboardPluginsList(
     modifier: Modifier = Modifier,
     navigateToDetail: (Long, PedalboardContentType) -> Unit
 ) {
+    // Trying to use Coil here
+     //res.getStringArray(R.array.planets_array)
+
+
     // changed from COLUMN to ROW, let's check it
     Column() {
         // Insert Top Bar here? or not here?
@@ -244,7 +258,7 @@ fun PedalboardPluginsList(
 
         LazyRow(
             modifier = modifier
-                .clip(shape = RoundedCornerShape(36.dp,0.dp,0.dp,0.dp))
+                .clip(shape = RoundedCornerShape(36.dp, 0.dp, 0.dp, 0.dp))
                 .background(MaterialTheme.colorScheme.surfaceDim), // color is fucked after libs update
                 //.padding(vertical = 12.dp),
             contentPadding = PaddingValues(
@@ -305,4 +319,16 @@ fun PedalboardPluginDetail(
             PedalboardPluginThreadItem(plugin = plugin)
         }*/
     }
+}
+
+@Composable
+fun ImageLoader(plugin: Plugin) {
+    val uri = Uri.parse("android.resource://com.mukuro.pedalboard/" + "R.drawable." + plugin.name.lowercase().replace(" ", "_") + ".jpg") //plugin.name.lowercase().replace(" ", "_") + ".jpg"
+    //val painter = re
+    Image(
+        painter = rememberAsyncImagePainter(uri),
+        contentDescription = "cover image",
+        contentScale = ContentScale.Fit,
+        modifier = Modifier.fillMaxSize()
+    )
 }

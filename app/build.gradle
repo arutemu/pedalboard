@@ -24,6 +24,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -112,4 +113,7 @@ dependencies {
     // Glide library
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     implementation "com.github.bumptech.glide:compose:1.0.0-beta01"
+
+    // Coil library
+    implementation "io.coil-kt:coil-compose:2.6.0"
 }

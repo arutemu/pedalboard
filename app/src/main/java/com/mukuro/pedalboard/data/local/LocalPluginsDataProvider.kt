@@ -1,5 +1,6 @@
 package com.mukuro.pedalboard.data.local
 
+import com.mukuro.pedalboard.R
 import com.mukuro.pedalboard.data.Knob
 import com.mukuro.pedalboard.data.PluginElement
 import com.mukuro.pedalboard.data.Plugin
@@ -15,16 +16,18 @@ object LocalPluginsDataProvider {
         Plugin(
             id = 1L,
             type = PluginType.DELAY,
-            name = "test delay plugin",
+            name = "test Nayuta plugin",
             aspectRatio = 0.6f,
-            elements = TestKnob.knobSet1
+            elements = TestKnob.knobSet1,
+            coverDrawable = R.drawable.nayuta
         ),
         Plugin(
             id = 2L,
             type = PluginType.CHORUS,
             name = "test chorus plugin",
             aspectRatio = 0.6f,
-            elements = TestKnob.knobSet2
+            elements = TestKnob.knobSet2,
+            coverDrawable = R.drawable.power
         ),
         Plugin(
             id = 3L,
@@ -55,7 +58,8 @@ object LocalPluginsDataProvider {
             type = PluginType.DISTORTION,
             name = "Boss double switch",
             aspectRatio = 1.088f,
-            elements = TestKnob.knobSet1
+            elements = TestKnob.knobSet1,
+            coverDrawable = R.drawable.makima
         ),
         Plugin(
             id = 4L,
@@ -69,7 +73,8 @@ object LocalPluginsDataProvider {
             type = PluginType.CHORUS,
             name = "EHX Big Muff",
             aspectRatio = 0.809f,
-            elements = TestKnob.knobSet1
+            elements = TestKnob.knobSet1,
+            coverDrawable = R.drawable.nayuta
         ),
         Plugin(
             id = 6L,
