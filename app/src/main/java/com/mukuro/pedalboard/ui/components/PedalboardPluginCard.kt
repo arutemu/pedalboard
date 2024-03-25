@@ -4,6 +4,7 @@ package com.mukuro.pedalboard.ui.components
 
 // for background
 // for palette
+import android.graphics.BitmapFactory
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,6 +53,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -63,7 +66,9 @@ import com.mukuro.pedalboard.data.Plugin
 import kotlin.math.cos
 import kotlin.math.sin
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
+import com.mukuro.pedalboard.R
 import com.mukuro.pedalboard.data.Knob
 import com.mukuro.pedalboard.data.RangeSlider
 import com.mukuro.pedalboard.data.Slider
@@ -101,27 +106,44 @@ fun PedalboardPluginCard(
     isOpened: Boolean = false,
     isSelected: Boolean = false,
 ) {
-    // Calculate Plugin Card values
-    var arrangement: Arrangement.HorizontalOrVertical = Arrangement.Center
-    var maxItemsCount = 3
 
+    // Calculate Plugin Card values
+    var maxItemsCount = 3
     when (plugin.aspectRatio) {
-        in 0f..0.7f-> {
-            arrangement = Arrangement.Center
-            maxItemsCount = 3
-        }
-        in 0.7f..1f -> {
-            arrangement = Arrangement.Center
-            maxItemsCount = 4
-        }
-        in 1f..Float.MAX_VALUE -> {
-            arrangement = Arrangement.SpaceEvenly
-            maxItemsCount = 5
-        }
-     else -> {
-         Arrangement.SpaceAround
-     }
+        in 0f..0.7f-> maxItemsCount = 3
+        in 0.65f..1f -> maxItemsCount = 4
+        in 1f..Float.MAX_VALUE -> maxItemsCount = 5
+     else -> Arrangement.SpaceAround
     }
+
+
+    // Get colours palette
+    val context = LocalContext.current
+
+    /* Convert our Image Resource into a Bitmap */
+    plugin.coverDrawable?.let {
+        val bitmap = remember {
+            BitmapFactory.decodeResource(context.resources, plugin.coverDrawable)
+        }
+        /* Create the Palette, pass the bitmap to it */
+        val palette = remember {
+            Palette.from(bitmap).generate()
+        }
+        /* Get the dark vibrant swatch */
+        val darkVibrantSwatch = palette.darkVibrantSwatch
+         /* Save array of colours */
+        val colorArray : Array<Int> = arrayOf(
+            palette.vibrantSwatch!!.rgb,
+            palette.darkVibrantSwatch!!.rgb,
+            palette.lightMutedSwatch!!.rgb,
+            palette.mutedSwatch!!.rgb,
+            palette.darkMutedSwatch!!.rgb
+        )
+    }
+
+
+
+
 
 
     Card(
@@ -309,9 +331,11 @@ fun PedalboardPluginCard(
                  * */
                 FlowRow(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        //.fillMaxWidth()
+                        .fillMaxSize()
                         .padding(4.dp), // 4-8 is ok
-                    horizontalArrangement = arrangement, //Arrangement.Center, //Arrangement.Absolute.SpaceEvenly, //.spacedBy(4.dp),
+                    horizontalArrangement = plugin.horizontal ?: Arrangement.Center,
+                    verticalArrangement = plugin.vertical ?: Arrangement.Top, //Arrangement.Center, //Arrangement.Absolute.SpaceEvenly, //.spacedBy(4.dp),
                     maxItemsInEachRow = maxItemsCount //3
                 )
                 {
@@ -380,7 +404,8 @@ fun PluginKnob(
     knobColor: Color = Color.DarkGray,
     indicatorColor: Color = Color.LightGray,
     onValueChanged: (Float) -> Unit,
-    value: Float = 0f
+    value: Float = 0f,
+    colors: Array<Int>? = null
     //content: @Composable () -> Unit // TODO - probably remove, don't think it may be needed here in the future
 ) {
     val startPosition : Float = (value * (knob.endPoint - knob.startPoint) / 360) // TODO fix calculation
