@@ -103,7 +103,7 @@ object LocalPluginsDataProvider {
         Plugin(
             id = 7L,
             type = PluginType.DELAY,
-            name = "Ibanez Tube Screamer Classic",
+            name = "Ibanez Tube Screamer Classic super duper long name",
             aspectRatio = 0.542f,
             elements = TestKnob.knobSet3,
             coverDrawable = R.drawable.anime_girl_4,

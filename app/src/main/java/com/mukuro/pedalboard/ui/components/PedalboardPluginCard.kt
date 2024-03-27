@@ -7,7 +7,10 @@ package com.mukuro.pedalboard.ui.components
 import android.graphics.BitmapFactory
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
@@ -47,18 +51,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.DefaultStrokeLineJoin
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,14 +85,10 @@ import com.mukuro.pedalboard.data.Slider
 import com.mukuro.pedalboard.data.Switch
 import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
 
-/* TODO
-*   1 - check comment below > card layout should be reworked fully
-*       a - partially done. but there is an issue with Volume Knob
-*           if it's size is too small, knob name is not visible.
-*           need to understand why and fix it to be scalable
-*   2 - found a way to get palette from images > get colors
-*   3 - got colors? apply to knobs
-*   4 - rename the fcking VOLUME KNOB to just KNOB*/
+/**
+ * TODO
+ * -
+* */
 
 /** Basically, the Card element for all the plugins on the rack.
  * As for now, only this one is needed.
@@ -95,7 +101,7 @@ import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
  * Leaving them atm. in case any proper user-case is defined.
  * */
 @OptIn(
-    ExperimentalLayoutApi::class
+    ExperimentalLayoutApi::class, ExperimentalFoundationApi::class
 )
 @Composable
 fun PedalboardPluginCard(
@@ -115,31 +121,42 @@ fun PedalboardPluginCard(
         in 1f..Float.MAX_VALUE -> maxItemsCount = 5
      else -> Arrangement.SpaceAround
     }
+    // Default colors
+    val colorArray : Array<Color> = arrayOf(
+        Color.DarkGray,
+        Color.LightGray,
+        Color.Red
+    )
+    val palette : Palette
 
 
     // Get colours palette
     val context = LocalContext.current
-
     /* Convert our Image Resource into a Bitmap */
-    plugin.coverDrawable?.let {
+/*    plugin.coverDrawable?.let {
         val bitmap = remember {
             BitmapFactory.decodeResource(context.resources, plugin.coverDrawable)
         }
-        /* Create the Palette, pass the bitmap to it */
-        val palette = remember {
+        *//* Create the Palette, pass the bitmap to it *//*
+        palette = remember {
             Palette.from(bitmap).generate()
         }
-        /* Get the dark vibrant swatch */
+*//*        *//**//* Get the dark vibrant swatch *//**//*
+        val vibrantSwatch = palette.vibrantSwatch
         val darkVibrantSwatch = palette.darkVibrantSwatch
-         /* Save array of colours */
-        val colorArray : Array<Int> = arrayOf(
-            palette.vibrantSwatch!!.rgb,
-            palette.darkVibrantSwatch!!.rgb,
-            palette.lightMutedSwatch!!.rgb,
-            palette.mutedSwatch!!.rgb,
-            palette.darkMutedSwatch!!.rgb
-        )
-    }
+        val darkMutedSwatch = palette.darkMutedSwatch
+        *//**//* Save array of colours *//**//*
+        //colorArray[0] = Color(palette.vibrantSwatch!!.rgb)
+        colorArray[0] = vibrantSwatch?.let { Color(it.rgb) } ?: Color.DarkGray
+        colorArray[1] = darkVibrantSwatch?.let { Color(it.rgb) } ?: Color.LightGray
+        colorArray[2] = darkMutedSwatch?.let { Color(it.rgb) } ?: Color.Red*//*
+
+        colorArray[0] = palette.vibrantSwatch?.let { Color(it.rgb) } ?: Color.DarkGray
+        colorArray[1] = palette.darkVibrantSwatch?.let { Color(it.rgb) } ?: Color.LightGray
+        colorArray[2] = palette.darkMutedSwatch?.let { Color(it.rgb) } ?: Color.Red
+    }*/
+
+
 
 
 
@@ -167,12 +184,6 @@ fun PedalboardPluginCard(
         )
     ) {
         var turnedOn: Boolean by rememberSaveable { mutableStateOf(true) } // TODO - change to rememberSavable if needed
-
-        // Experimental image corner
-/*        val uri = Uri.parse("android.resource://com.mukuro.pedalboard/" + "R.drawable." + plugin.name.lowercase().replace(" ", "_"))
-        val shortUri = Uri.parse("R.drawable." + plugin.name.lowercase().replace(" ", "_"))
-        // val resId: Int = LocalContext.current.resources.getIdentifier("makima", "drawable", )
-        val drawable = LocalContext.current.getDrawable(R.drawable.makima)*/
 
         Box(
             modifier = Modifier
@@ -209,14 +220,27 @@ fun PedalboardPluginCard(
 
             // Coil Image element
             plugin.coverDrawable?.let {
+                // Draw image
                 AsyncImage(
                     model = plugin.coverDrawable,
-                    contentDescription = "Makima",
+                    contentDescription = "cover",
                     contentScale = ContentScale.Crop,
                     alignment = BiasAlignment(0f, -1f),
                     modifier = Modifier
                         .fillMaxSize()
                 )
+                // Generate palette
+                val bitmap = remember { BitmapFactory.decodeResource(context.resources, plugin.coverDrawable) }
+
+                /* Create the Palette, pass the bitmap to it */
+                //val palette = remember { Palette.from(bitmap).generate() }
+                val palette = remember {
+                    Palette.from(bitmap).generate()
+                }
+                
+                colorArray[0] = palette.vibrantSwatch?.let { Color(it.rgb) } ?: Color.DarkGray
+                colorArray[1] = palette.darkVibrantSwatch?.let { Color(it.rgb) } ?: Color.LightGray
+                colorArray[2] = palette.darkMutedSwatch?.let { Color(it.rgb) } ?: Color.Red
             }
 
             // TODO - part of background image implementation. Waiting for a proper refactor
@@ -264,6 +288,7 @@ fun PedalboardPluginCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
+                            .basicMarquee() // Experimental shit
                             .weight(1f)
                             //.align(Alignment.CenterHorizontally)
                             .padding(start = 12.dp, end = 4.dp),
@@ -271,6 +296,7 @@ fun PedalboardPluginCard(
                             color = MaterialTheme.colorScheme.inverseOnSurface,
                             fontSize = 20.sp,
                             fontStyle = FontStyle.Normal,
+                            //fontFamily = FontFamily.Cursive,
                             //fontWeight = FontWeight.Bold,
                         )
                     )
@@ -359,7 +385,8 @@ fun PedalboardPluginCard(
                                     */
                                     println(it.name+" changed: $value")},
                                 value = 1f,
-                                modifier = Modifier.size(height = 150.dp, width = 120.dp) // Let's settle for this size for now .____.
+                                modifier = Modifier.size(height = 150.dp, width = 120.dp),
+                                colors = colorArray// Let's settle for this size for now .____.
                                 )
                             is Switch -> {}
                             is Slider -> {}
@@ -405,7 +432,7 @@ fun PluginKnob(
     indicatorColor: Color = Color.LightGray,
     onValueChanged: (Float) -> Unit,
     value: Float = 0f,
-    colors: Array<Int>? = null
+    colors: Array<Color>? = null
     //content: @Composable () -> Unit // TODO - probably remove, don't think it may be needed here in the future
 ) {
     val startPosition : Float = (value * (knob.endPoint - knob.startPoint) / 360) // TODO fix calculation
@@ -425,13 +452,19 @@ fun PluginKnob(
     ) {
         Text( // Current knob value
             text = "%.1f".format(angle.mapRange(0f,1f, knob.startPoint, knob.endPoint)).toFloat().toString()+knob.measure,
+            color = colors?.get(2) ?: Color.DarkGray,
+            textAlign = TextAlign.Center,
             modifier = Modifier
+                .fillMaxWidth(fraction = 0.5f)
                 .align(Alignment.CenterHorizontally) // would be good to add some outline here like in commented lines
                 //.clip(CircleShape)
-                .padding(top = 4.dp, bottom = 4.dp),
+                .padding(top = 4.dp, bottom = 4.dp)
+                //.alpha(0.5f)
+                .background(color = (colors?.get(1) ?: knobColor), shape = RoundedCornerShape(size = 12.dp)),
             //.wrapContentSize(Alignment.TopCenter, unbounded = false),
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.Medium
+            maxLines = 1,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Medium //FontWeight.Medium
             //, fontSize = 12.sp)
         )
         Box(
@@ -450,7 +483,7 @@ fun PluginKnob(
 
                 // Draw the filled knob circle
                 drawCircle(
-                    color = knobColor,
+                    color = colors?.get(1) ?: knobColor, //?: knobColor,
                     center = Offset(centerX, centerY),
                     radius = radius
                 )
@@ -477,13 +510,13 @@ fun PluginKnob(
                 )
                 // Left marker
                 drawCircle(
-                    color = Color.LightGray,
+                    color = colors?.get(1) ?: Color.LightGray,
                     center = Offset(pointerLeftX,pointerY),
                     radius = 4f
                 )
                 // Right marker
                 drawCircle(
-                    color = Color.LightGray,
+                    color = colors?.get(1) ?: Color.LightGray,
                     center = Offset(pointerRightX,pointerY),
                     radius = 4f
                 )
@@ -497,7 +530,7 @@ fun PluginKnob(
                 )
                 // Indicator on the Knob
                 drawCircle(
-                    color = indicatorColor,
+                    color = colors?.get(0) ?: indicatorColor,
                     center = Offset(indicatorCenterX, indicatorCenterY),
                     radius = indicatorRadius * 0.5f
                 )
@@ -505,15 +538,30 @@ fun PluginKnob(
         }
         Text(
             text = knob.name,
+            color = colors?.get(2) ?: Color.DarkGray,
+            textAlign = TextAlign.Center,
             modifier = Modifier
+                //.fillMaxWidth(fraction = 0.8f)
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 4.dp, bottom = 4.dp),
+                //.background(color = (colors?.get(1) ?: knobColor), shape = RoundedCornerShape(size = 8.dp)),
             //style = TextStyle(color = Color.Black, fontSize = 12.sp, fontWeight = FontWeight.Bold),
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleMedium.merge(
+                TextStyle(color = colors?.get(1) ?: Color.DarkGray,
+                    //fontSize = 80.sp,
+                    drawStyle = Stroke(
+                        miter = 10f,
+                        width = 2f,
+                        join = StrokeJoin.Round
+                    )
+                )
+            ),
             fontWeight = FontWeight.ExtraBold
         )
     }
 }
+
+// TODO - WIP - barely started
 @Composable
 fun PluginSlider(
     slider: Slider,
