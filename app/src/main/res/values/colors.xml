@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="power_on_FAB">#5EC281</color>
+    <color name="power_off_FAB">#C25E66</color>
+    <color name="power_on_FAB_icon">#5B8124</color>
+    <color name="power_off_FAB_icon">#845682</color>
 </resources>

@@ -3,7 +3,9 @@
 // TODO -
 package com.mukuro.pedalboard.ui.navigation
 
+import android.content.res.Resources
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MenuOpen
+import androidx.compose.material.icons.filled.Power
+import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -46,9 +50,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
@@ -66,6 +73,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import com.mukuro.pedalboard.R
+import com.mukuro.pedalboard.R.color.power_on_FAB
+import com.mukuro.pedalboard.ui.theme.power_off_FAB
 import com.mukuro.pedalboard.ui.utils.PedalboardNavigationContentPosition
 import kotlinx.coroutines.launch
 
@@ -82,6 +91,8 @@ fun PedalboardNavigationRail(
         // May insert header  here // header =
         containerColor = MaterialTheme.colorScheme.inverseOnSurface
     ) {
+        // TODO - connect powerOn to actual engine start
+        var powerOn: Boolean by rememberSaveable { mutableStateOf(false) }
         // TODO remove custom nav rail positioning when NavRail component supports it. ticket : b/232495216
         Layout(
             modifier = Modifier.widthIn(max = 80.dp),
@@ -108,16 +119,19 @@ fun PedalboardNavigationRail(
                             )
                         }
                     )
+                    val fabColor by animateColorAsState(if (powerOn) Color(0xFF5EC281) else Color(0xffc25e66), label = "Power State")
+                    val iconColor by animateColorAsState(if (powerOn) Color(0xcc00643b) else Color(0xff871055), label = "Power State")
                     FloatingActionButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { powerOn = !powerOn },
                         modifier = Modifier.padding(top = 8.dp, bottom = 32.dp),
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        containerColor = fabColor, //MaterialTheme.colorScheme.tertiaryContainer,
                         contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(id = R.string.edit),
-                            modifier = Modifier.size(18.dp)
+                            imageVector = Icons.Default.PowerSettingsNew,
+                            contentDescription = stringResource(id = R.string.power),
+                            modifier = Modifier.size(18.dp),
+                            tint = iconColor
                         )
                     }
                     Spacer(Modifier.height(8.dp)) // NavigationRailHeaderPadding
