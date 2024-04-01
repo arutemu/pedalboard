@@ -213,6 +213,7 @@ fun PedalboardBottomNavigationBar(
         }
     }
 }
+
 /*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -494,7 +495,7 @@ fun DismissibleNavigationDrawerContent(
     navigationContentPosition: PedalboardNavigationContentPosition,
     navigateToTopLevelDestination: (PedalboardTopLevelDestination) -> Unit,
     drawerState: DrawerState,// = rememberDrawerState(DrawerValue.Closed),
-    gesturesEnabled: Boolean = false,
+    gesturesEnabled: Boolean = true,
     onDrawerClicked: () -> Unit = {}
 ) {
     // GOVNOKOD
