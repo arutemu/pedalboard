@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -177,6 +178,7 @@ fun PedalboardPluginCard(
                 onLongClick = { toggleSelection(plugin.id) }
             )*/
             .clip(CardDefaults.shape),
+            //.safeDrawingPadding(),
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
             else if (isOpened) MaterialTheme.colorScheme.secondaryContainer // WTF
@@ -219,7 +221,7 @@ fun PedalboardPluginCard(
             }*/
 
             // Coil Image element
-            plugin.coverDrawable?.let {
+/*            plugin.coverDrawable?.let {
                 // Draw image
                 AsyncImage(
                     model = plugin.coverDrawable,
@@ -232,7 +234,7 @@ fun PedalboardPluginCard(
                 // Generate palette
                 val bitmap = remember { BitmapFactory.decodeResource(context.resources, plugin.coverDrawable) }
 
-                /* Create the Palette, pass the bitmap to it */
+                *//* Create the Palette, pass the bitmap to it *//*
                 //val palette = remember { Palette.from(bitmap).generate() }
                 val palette = remember {
                     Palette.from(bitmap).generate()
@@ -241,7 +243,7 @@ fun PedalboardPluginCard(
                 colorArray[0] = palette.vibrantSwatch?.let { Color(it.rgb) } ?: Color.DarkGray
                 colorArray[1] = palette.darkVibrantSwatch?.let { Color(it.rgb) } ?: Color.LightGray
                 colorArray[2] = palette.darkMutedSwatch?.let { Color(it.rgb) } ?: Color.Red
-            }
+            }*/
 
             // TODO - part of background image implementation. Waiting for a proper refactor
             //val imageResource = getCardImageResource(plugin.name)
@@ -276,10 +278,10 @@ fun PedalboardPluginCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .height(48.dp)
                         .fillMaxWidth()
+                        .height(48.dp)
                         //.padding(top = 12.dp)
-                        .safeContentPadding()
+                        //.safeContentPadding()
                         .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f))
                         //.alpha(50f)
                 ) {
@@ -361,7 +363,7 @@ fun PedalboardPluginCard(
                         .fillMaxSize()
                         .padding(4.dp), // 4-8 is ok
                     horizontalArrangement = plugin.horizontal ?: Arrangement.Center,
-                    verticalArrangement = plugin.vertical ?: Arrangement.Top, //Arrangement.Center, //Arrangement.Absolute.SpaceEvenly, //.spacedBy(4.dp),
+                    //verticalArrangement = plugin.vertical ?: Arrangement.Top, //Arrangement.Center, //Arrangement.Absolute.SpaceEvenly, //.spacedBy(4.dp),
                     maxItemsInEachRow = maxItemsCount //3
                 )
                 {
@@ -452,15 +454,16 @@ fun PluginKnob(
     ) {
         Text( // Current knob value
             text = "%.1f".format(angle.mapRange(0f,1f, knob.startPoint, knob.endPoint)).toFloat().toString()+knob.measure,
-            color = colors?.get(2) ?: Color.DarkGray,
+            color = colors?.get(0) ?: Color.DarkGray,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .fillMaxWidth(fraction = 0.5f)
-                .align(Alignment.CenterHorizontally) // would be good to add some outline here like in commented lines
+                .fillMaxWidth(fraction = 0.45f)
+                 // would be good to add some outline here like in commented lines
                 //.clip(CircleShape)
                 .padding(top = 4.dp, bottom = 4.dp)
                 //.alpha(0.5f)
-                .background(color = (colors?.get(1) ?: knobColor), shape = RoundedCornerShape(size = 12.dp)),
+                .background(color = (colors?.get(1) ?: knobColor), shape = RoundedCornerShape(size = 12.dp))
+                .align(Alignment.CenterHorizontally),
             //.wrapContentSize(Alignment.TopCenter, unbounded = false),
             maxLines = 1,
             style = MaterialTheme.typography.labelSmall,
@@ -503,10 +506,10 @@ fun PluginKnob(
                 val pointerRightX = centerX - (cos(Math.toRadians(254.0)).toFloat() * (radius * 1.28f))
 
                 val colorStops = arrayOf(
-                    0.0f to Color.DarkGray,
+                    0.0f to Color.LightGray, //DarkGray,
                     0.16f to Color.Red,
                     0.33f to Color.LightGray,
-                    0.75f to Color.DarkGray
+                    0.75f to Color.LightGray //DarkGray
                 )
                 // Left marker
                 drawCircle(
@@ -538,16 +541,16 @@ fun PluginKnob(
         }
         Text(
             text = knob.name,
-            color = colors?.get(2) ?: Color.DarkGray,
+            color = colors?.get(0) ?: Color.DarkGray,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                //.fillMaxWidth(fraction = 0.8f)
+                .fillMaxWidth(fraction = 0.5f)
                 .align(Alignment.CenterHorizontally)
-                .padding(top = 4.dp, bottom = 4.dp),
-                //.background(color = (colors?.get(1) ?: knobColor), shape = RoundedCornerShape(size = 8.dp)),
+                .padding(top = 4.dp, bottom = 4.dp)
+                .background(color = (colors?.get(1) ?: knobColor), shape = RoundedCornerShape(size = 30.dp)),
             //style = TextStyle(color = Color.Black, fontSize = 12.sp, fontWeight = FontWeight.Bold),
-            style = MaterialTheme.typography.titleMedium.merge(
-                TextStyle(color = colors?.get(1) ?: Color.DarkGray,
+            style = MaterialTheme.typography.labelMedium //titleMedium //.merge(
+                /* TextStyle(color = colors?.get(1) ?: Color.DarkGray,
                     //fontSize = 80.sp,
                     drawStyle = Stroke(
                         miter = 10f,
@@ -555,8 +558,9 @@ fun PluginKnob(
                         join = StrokeJoin.Round
                     )
                 )
-            ),
-            fontWeight = FontWeight.ExtraBold
+            )*/,
+            maxLines = 1,
+            //fontWeight = FontWeight.ExtraBold
         )
     }
 }

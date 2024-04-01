@@ -18,7 +18,6 @@ object PedalboardRoute {
     const val PRESETS = "Presets"
     const val RECORDED = "Recorded"
     const val DRUMS = "Drums"
-    //const val POWER = "Power"
 }
 
 data class PedalboardTopLevelDestination(

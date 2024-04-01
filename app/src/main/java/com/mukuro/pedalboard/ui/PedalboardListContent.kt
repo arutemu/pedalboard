@@ -156,7 +156,7 @@ fun PedalboardEffectsScreen(
     if (contentType == PedalboardContentType.DUAL_PANE) {
         TwoPane(
             first = {
-                PedalboardPluginsList(
+                PedalboardAllPluginsList(
                     plugins = pedalboardHomeUIState.plugins,
                     openedPlugin = pedalboardHomeUIState.openedPlugin,
                     selectedPluginIds = pedalboardHomeUIState.selectedPlugins,
@@ -184,23 +184,6 @@ fun PedalboardEffectsScreen(
                 closeDetailScreen = closeDetailScreen,
                 navigateToDetail = navigateToDetail
             )
-            // When we have bottom navigation we show FAB at the bottom end.
-            if (navigationType == PedalboardNavigationType.BOTTOM_NAVIGATION) {
-                LargeFloatingActionButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(16.dp),
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = stringResource(id = R.string.edit),
-                        modifier = Modifier.size(28.dp)
-                    )
-                }
-            }
         }
     }
 }
@@ -261,6 +244,58 @@ fun PedalboardPluginsList(
                 .clip(shape = RoundedCornerShape(36.dp, 0.dp, 0.dp, 0.dp))
                 .background(MaterialTheme.colorScheme.surfaceDim), // color is fucked after libs update
                 //.padding(vertical = 12.dp),
+            contentPadding = PaddingValues(
+                start = 24.dp,
+                end = 24.dp
+            ),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            state = pluginLazyListState) {
+/*        item {
+            PedalboardSearchBar(modifier = Modifier.fillMaxWidth())
+        }*/
+            items(items = plugins, key = { it.id }) { plugin ->
+                PedalboardPluginCard(
+                    plugin = plugin,
+                    navigateToDetail = { pluginId ->
+                        navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)
+                    },
+                    toggleSelection = togglePluginSelection,
+                    isOpened = openedPlugin?.id == plugin.id,
+                    isSelected = selectedPluginIds.contains(plugin.id)
+                )
+            }
+        }
+
+    }
+}
+
+@Composable
+fun PedalboardAllPluginsList(
+    plugins: List<Plugin>,
+    openedPlugin: Plugin?,
+    selectedPluginIds: Set<Long>,
+    togglePluginSelection: (Long) -> Unit,
+    pluginLazyListState: LazyListState,
+    modifier: Modifier = Modifier,
+    navigateToDetail: (Long, PedalboardContentType) -> Unit
+) {
+    // Trying to use Coil here
+    //res.getStringArray(R.array.planets_array)
+
+
+    // changed from COLUMN to ROW, let's check it
+    Column() {
+        // Insert Top Bar here? or not here?
+        //PedalboardSearchBar(modifier = Modifier.fillMaxWidth()) // And replace this shit!
+        //PedalboardTopBar(modifier = Modifier.fillMaxWidth(), onBackPressed = {}) // TODO - remove it from here? probably? Found a better place for it already :3
+        // For Glide
+        val state = rememberLazyListState()
+
+        LazyRow(
+            modifier = modifier
+                .clip(shape = RoundedCornerShape(36.dp, 0.dp, 0.dp, 0.dp))
+                .background(MaterialTheme.colorScheme.surfaceDim), // color is fucked after libs update
+            //.padding(vertical = 12.dp),
             contentPadding = PaddingValues(
                 start = 24.dp,
                 end = 24.dp

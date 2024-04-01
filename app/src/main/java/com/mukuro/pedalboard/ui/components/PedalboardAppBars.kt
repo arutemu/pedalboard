@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSizeIn
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Circle
@@ -84,7 +87,7 @@ fun PluginDetailAppBar(
     plugin: Plugin,
     isFullScreen: Boolean,
     modifier: Modifier = Modifier,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit // Add --- onDrawerClicked: () -> Unit = {},
 ) {
     TopAppBar(
         modifier = modifier,
@@ -114,7 +117,9 @@ fun PluginDetailAppBar(
             if (isFullScreen) {
                 FilledIconButton(
                     onClick = onBackPressed,
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier
+                        .width(90.dp)
+                        .padding(8.dp),
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surface,
                         contentColor = MaterialTheme.colorScheme.onSurface
@@ -146,10 +151,10 @@ fun PluginDetailAppBar(
 @Composable
 fun PedalboardTopBar(
     modifier: Modifier = Modifier,
-    onBackPressed: () -> Unit
+    onDrawerClicked: () -> Unit = {} //onBackPressed: () -> Unit
 ) {
     TopAppBar(
-        modifier = modifier,
+        modifier = modifier, //.safeDrawingPadding(),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.inverseOnSurface
         ),
@@ -166,37 +171,38 @@ fun PedalboardTopBar(
                 horizontalAlignment = Alignment.Start
 
             ) {
+                // TODO - add dynamic titles for each app page (dunno how yet tho)
                 Text(
-                    text = "Pedalboard Top Bar",
+                    text = "Pedal board",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    //text = "${plugin.name} ${stringResource(id = R.string.messages)}"
-                    text = "Additional title", ///// something very stupid here
+                    text = "On-board plugins",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline
                 )
             }
 
         },
-/*        navigationIcon = {
-            FilledIconButton(
-                onClick = onBackPressed,
-                modifier = Modifier.padding(8.dp),
-                colors = IconButtonDefaults.filledIconButtonColors(
+        navigationIcon = {
+            IconButton(
+                onClick = onDrawerClicked,
+                modifier = Modifier
+                    .width(72.dp),
+/*                colors = IconButtonDefaults.filledIconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                     contentColor = MaterialTheme.colorScheme.onSurface
-                )
+                )*/
             ) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = stringResource(id = R.string.back_button),
-                    modifier = Modifier.size(14.dp)
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = stringResource(id = R.string.navigation_drawer),
+                    modifier = Modifier.size(24.dp)
                 )
             }
-        },*/
+        },
         actions = {
             var checked: Boolean by remember { mutableStateOf(false) } // TODO - change to rememberSavable if needed
             var recChecked: Boolean by remember { mutableStateOf(false) }

@@ -53,7 +53,7 @@ fun PedalboardTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-    val view = LocalView.current
+/*    val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
@@ -62,7 +62,7 @@ fun PedalboardTheme(
             //window.statusBarColor = colorScheme.inverseOnSurface.toArgb() // for the same color as the top bar, but with font color issue
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
-    }
+    }*/
 
     MaterialTheme(
         colorScheme = colorScheme,

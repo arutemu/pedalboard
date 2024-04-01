@@ -98,27 +98,23 @@ fun PedalboardNavigationRail(
             modifier = Modifier.widthIn(max = 80.dp),
             content = {
                 Column(
-                    modifier = Modifier.layoutId(LayoutType.HEADER),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .layoutId(LayoutType.HEADER),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    NavigationRailItem(
+                ) { /** Old Nav.Drawer icon was here */
+/*                    NavigationRailItem(
                         selected = false,
                         // Experiment
                         onClick = onDrawerClicked,
-                        /*onClick = DismissibleNavigationDrawerContent(
-                            selectedDestination = selectedDestination,
-                            navigationContentPosition = navigationContentPosition,
-                            navigateToTopLevelDestination = navigateToTopLevelDestination
-                            //drawerState = drawerState
-                        ),*/
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Menu,
                                 contentDescription = stringResource(id = R.string.navigation_drawer)
                             )
                         }
-                    )
+                    )*/
                     val fabColor by animateColorAsState(if (powerOn) Color(0xFF5EC281) else Color(0xffc25e66), label = "Power State")
                     val iconColor by animateColorAsState(if (powerOn) Color(0xcc00643b) else Color(0xff871055), label = "Power State")
                     FloatingActionButton(

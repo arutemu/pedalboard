@@ -126,16 +126,22 @@ fun PedalboardApp(
         }
     } ///// FUCK THIS CODE, LEAVE IT ON TOP!!!!1 TODO - refactor ^ that shit, it's almost useless
 
-    PedalboardNavigationWrapper(
-        navigationType = navigationType,
-        contentType = contentType,
-        displayFeatures = displayFeatures,
-        navigationContentPosition = navigationContentPosition,
-        pedalboardHomeUIState = pedalboardHomeUIState,
-        closeDetailScreen = closeDetailScreen,
-        navigateToDetail = navigateToDetail,
-        toggleSelectedPlugin = toggleSelectedPlugin
-    )
+    Column(modifier = Modifier){
+        PedalboardTopBar(onDrawerClicked = {
+
+        })
+        PedalboardNavigationWrapper(
+            navigationType = navigationType,
+            contentType = contentType,
+            displayFeatures = displayFeatures,
+            navigationContentPosition = navigationContentPosition,
+            pedalboardHomeUIState = pedalboardHomeUIState,
+            closeDetailScreen = closeDetailScreen,
+            navigateToDetail = navigateToDetail,
+            toggleSelectedPlugin = toggleSelectedPlugin
+        )
+    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -338,7 +344,7 @@ fun PedalboardAppContent(
 
              */
 
-            PedalboardTopBar(onBackPressed = {})
+            //PedalboardTopBar(onDrawerClicked = {})
             PedalboardNavHost(
                 navController = navController,
                 contentType = contentType,
