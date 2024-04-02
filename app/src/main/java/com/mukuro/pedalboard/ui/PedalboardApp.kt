@@ -185,6 +185,7 @@ private fun PedalboardNavigationWrapper(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     //val isNavigationRailVisible = remember { mutableStateOf(true) }
+    val onDrawerClicked = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val navController = rememberNavController()
     val navigationActions = remember(navController) {
@@ -204,19 +205,126 @@ private fun PedalboardNavigationWrapper(
         )*/
 
 
+        Column(modifier = Modifier){
+            PedalboardTopBar(onDrawerClicked = { })
 
-    // Change 3
-    //if (navigationType == ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER) {
-    if (navigationType == PedalboardNavigationType.DISMISSIBLE_NAVIGATION_DRAWER) {
+            Box(modifier = Modifier) {
 
-        // TODO check on custom width of PermanentNavigationDrawer: b/232495216
-        DismissibleNavigationDrawer(drawerState = drawerState, drawerContent = {
+                Row(modifier = Modifier){
+                    Column(modifier = Modifier.width(80.dp)){ }
+                    if (navigationType == PedalboardNavigationType.DISMISSIBLE_NAVIGATION_DRAWER) {
 
-                // TODO - move NavRail here?
+                        // TODO check on custom width of PermanentNavigationDrawer: b/232495216
+                        DismissibleNavigationDrawer(drawerState = drawerState, drawerContent = {
 
-/*                PedalboardNavigationRail(
+                            // TODO - move NavRail here?
+
+                            /*                PedalboardNavigationRail(
+                                                selectedDestination = selectedDestination,
+                                                navigationContentPosition = navigationContentPosition,
+                                                navigateToTopLevelDestination = navigationActions::navigateTo,
+                                                onDrawerClicked = {
+                                                    if (drawerState.isOpen) {
+                                                        scope.launch {
+                                                            drawerState.close()
+                                                        }
+                                                    }
+                                                    else {
+                                                        scope.launch {
+                                                            drawerState.open()
+                                                        }
+                                                    }
+                                                }
+                                            )*/
+
+                            DismissibleNavigationDrawerContent(
+                                selectedDestination = selectedDestination,
+                                navigationContentPosition = navigationContentPosition,
+                                navigateToTopLevelDestination = navigationActions::navigateTo,
+                                drawerState = drawerState
+                            )
+                        }
+                        ) {
+                            PedalboardAppContent(
+                                navigationType = navigationType,
+                                contentType = contentType,
+                                displayFeatures = displayFeatures,
+                                navigationContentPosition = navigationContentPosition,
+                                pedalboardHomeUIState = pedalboardHomeUIState,
+                                navController = navController,
+                                selectedDestination = selectedDestination,
+                                navigateToTopLevelDestination = navigationActions::navigateTo,
+                                closeDetailScreen = closeDetailScreen,
+                                navigateToDetail = navigateToDetail,
+                                toggleSelectedPlugin = toggleSelectedPlugin,
+                                onDrawerClicked =  {
+                                    if (drawerState.isOpen) {
+                                        scope.launch {
+                                            drawerState.close()
+                                        }
+                                    }
+                                    else {
+                                        scope.launch {
+                                            drawerState.open()
+                                        }
+                                    }
+                                },
+                                isNavigationRailVisible = true,//!(drawerState.isOpen || (drawerState.isClosed && drawerState.isAnimationRunning)),//(drawerState.isClosed) || (drawerState.isClosed && drawerState.isAnimationRunning),//drawerState.isAnimationRunning || drawerState.isClosed,
+                                drawerState = drawerState
+                            )
+
+                        }
+                    } else {
+                        ModalNavigationDrawer(
+                            //gesturesEnabled = false,
+                            drawerContent = {
+                                ModalNavigationDrawerContent(
+                                    selectedDestination = selectedDestination,
+                                    navigationContentPosition = navigationContentPosition,
+                                    navigateToTopLevelDestination = navigationActions::navigateTo,
+                                    onDrawerClicked = {
+                                        scope.launch {
+                                            drawerState.close()
+                                        }
+                                    }
+                                )
+                            },
+                            drawerState = drawerState
+                        ) {
+                            PedalboardAppContent(
+                                navigationType = navigationType,
+                                contentType = contentType,
+                                displayFeatures = displayFeatures,
+                                navigationContentPosition = navigationContentPosition,
+                                pedalboardHomeUIState = pedalboardHomeUIState,
+                                navController = navController,
+                                selectedDestination = selectedDestination,
+                                navigateToTopLevelDestination = navigationActions::navigateTo,
+                                closeDetailScreen = closeDetailScreen,
+                                navigateToDetail = navigateToDetail,
+                                toggleSelectedPlugin = toggleSelectedPlugin,
+                                onDrawerClicked = {
+                                    if (drawerState.isOpen) {
+                                        scope.launch {
+                                            drawerState.close()
+                                        }
+                                    }
+                                    else {
+                                        scope.launch {
+                                            drawerState.open()
+                                        }
+                                    }
+                                },
+                                isNavigationRailVisible = false,
+                                drawerState = drawerState
+                            )
+                        }
+                    }
+                }
+
+                PedalboardNavigationRail(
                     selectedDestination = selectedDestination,
-                    navigationContentPosition = navigationContentPosition,
+                    navigationContentPosition = PedalboardNavigationContentPosition.CENTER ,
                     navigateToTopLevelDestination = navigationActions::navigateTo,
                     onDrawerClicked = {
                         if (drawerState.isOpen) {
@@ -230,91 +338,16 @@ private fun PedalboardNavigationWrapper(
                             }
                         }
                     }
-                )*/
-
-            DismissibleNavigationDrawerContent(
-                selectedDestination = selectedDestination,
-                navigationContentPosition = navigationContentPosition,
-                navigateToTopLevelDestination = navigationActions::navigateTo,
-                drawerState = drawerState
-            )
-        }
-        ) {
-            PedalboardAppContent(
-                navigationType = navigationType,
-                contentType = contentType,
-                displayFeatures = displayFeatures,
-                navigationContentPosition = navigationContentPosition,
-                pedalboardHomeUIState = pedalboardHomeUIState,
-                navController = navController,
-                selectedDestination = selectedDestination,
-                navigateToTopLevelDestination = navigationActions::navigateTo,
-                closeDetailScreen = closeDetailScreen,
-                navigateToDetail = navigateToDetail,
-                toggleSelectedPlugin = toggleSelectedPlugin,
-                onDrawerClicked =  {
-                    if (drawerState.isOpen) {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    }
-                    else {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }
-                },
-                isNavigationRailVisible = true,//!(drawerState.isOpen || (drawerState.isClosed && drawerState.isAnimationRunning)),//(drawerState.isClosed) || (drawerState.isClosed && drawerState.isAnimationRunning),//drawerState.isAnimationRunning || drawerState.isClosed,
-                drawerState = drawerState
-            )
-
-        }
-    } else {
-        ModalNavigationDrawer(
-            //gesturesEnabled = false,
-            drawerContent = {
-                ModalNavigationDrawerContent(
-                    selectedDestination = selectedDestination,
-                    navigationContentPosition = navigationContentPosition,
-                    navigateToTopLevelDestination = navigationActions::navigateTo,
-                    onDrawerClicked = {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    }
                 )
-            },
-            drawerState = drawerState
-        ) {
-            PedalboardAppContent(
-                navigationType = navigationType,
-                contentType = contentType,
-                displayFeatures = displayFeatures,
-                navigationContentPosition = navigationContentPosition,
-                pedalboardHomeUIState = pedalboardHomeUIState,
-                navController = navController,
-                selectedDestination = selectedDestination,
-                navigateToTopLevelDestination = navigationActions::navigateTo,
-                closeDetailScreen = closeDetailScreen,
-                navigateToDetail = navigateToDetail,
-                toggleSelectedPlugin = toggleSelectedPlugin,
-                onDrawerClicked =  {
-                    if (drawerState.isOpen) {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    }
-                    else {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }
-                },
-                isNavigationRailVisible = false,
-                drawerState = drawerState
-            )
+
+            }
         }
-    }
+
+
+
+    // Change 3
+    //if (navigationType == ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER) {
+
 }
 
 @Composable
@@ -339,21 +372,8 @@ fun PedalboardAppContent(
     val scope = rememberCoroutineScope()
     //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    Row(modifier = modifier.fillMaxSize()) {
-        //////////////////// Added shit here - second condition, probably not the best idea
-        AnimatedVisibility(
-            visible = isNavigationRailVisible,//(drawerState.isClosed) || (drawerState.isClosed && drawerState.isAnimationRunning),
-            enter = expandHorizontally(expandFrom = AbsoluteAlignment.Left),
-            exit = shrinkHorizontally(shrinkTowards = AbsoluteAlignment.Right)
-            )
-        {// navigationType == PedalboardNavigationType.NAVIGATION_RAIL || navigationType == PedalboardNavigationType.DISMISSABLE_NAVIGATION_DRAWER ) {
-                            PedalboardNavigationRail(
-                                selectedDestination = selectedDestination,
-                                navigationContentPosition = navigationContentPosition,
-                                navigateToTopLevelDestination = navigateToTopLevelDestination,
-                                onDrawerClicked = onDrawerClicked
-                            )
-        }
+    //Row(modifier = modifier.fillMaxSize()) {
+
         // Possible place to insert the action bar
         Column(
             modifier = Modifier
@@ -387,7 +407,7 @@ fun PedalboardAppContent(
 
 
 
-    }
+    //}
 }
 
 @Composable
