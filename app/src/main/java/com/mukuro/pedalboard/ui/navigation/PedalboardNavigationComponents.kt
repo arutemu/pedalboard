@@ -84,7 +84,7 @@ fun PedalboardNavigationRail(
     navigationContentPosition: PedalboardNavigationContentPosition,
     navigateToTopLevelDestination: (PedalboardTopLevelDestination) -> Unit,
     onDrawerClicked: () -> Unit = {},
-    //drawerState: DrawerState
+    drawerState: DrawerState
 ) {
     NavigationRail(
         modifier = Modifier.fillMaxHeight(),

@@ -182,10 +182,10 @@ private fun PedalboardNavigationWrapper(
     navigateToDetail: (Long, PedalboardContentType) -> Unit,
     toggleSelectedPlugin: (Long) -> Unit
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
     val scope = rememberCoroutineScope()
     //val isNavigationRailVisible = remember { mutableStateOf(true) }
-    val onDrawerClicked = rememberDrawerState(initialValue = DrawerValue.Closed)
+    //val onDrawerClicked = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val navController = rememberNavController()
     val navigationActions = remember(navController) {
@@ -206,7 +206,18 @@ private fun PedalboardNavigationWrapper(
 
 
         Column(modifier = Modifier){
-            PedalboardTopBar(onDrawerClicked = { })
+            PedalboardTopBar(onDrawerClicked = {
+                if (drawerState.isOpen) {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                }
+                else {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                }
+            })
 
             Box(modifier = Modifier) {
 
@@ -337,8 +348,11 @@ private fun PedalboardNavigationWrapper(
                                 drawerState.open()
                             }
                         }
-                    }
+                    },
+                    drawerState = drawerState
                 )
+
+
 
             }
         }
