@@ -129,13 +129,10 @@ fun PedalboardApp(
         }
     } ///// FUCK THIS CODE, LEAVE IT ON TOP!!!!1 TODO - refactor ^ that shit, it's almost useless
 
-    Column(modifier = Modifier){
-        PedalboardTopBar(onDrawerClicked = {
+/*    Column(modifier = Modifier){
+        PedalboardTopBar(onDrawerClicked = { })
 
-        })
         Box(modifier = Modifier) {
-
-
 
             Row(modifier = Modifier){
                 Column(modifier = Modifier.width(80.dp)){ }
@@ -158,8 +155,18 @@ fun PedalboardApp(
             )
 
         }
+    }*/
 
-    }
+    PedalboardNavigationWrapper(
+        navigationType = navigationType,
+        contentType = contentType,
+        displayFeatures = displayFeatures,
+        navigationContentPosition = navigationContentPosition,
+        pedalboardHomeUIState = pedalboardHomeUIState,
+        closeDetailScreen = closeDetailScreen,
+        navigateToDetail = navigateToDetail,
+        toggleSelectedPlugin = toggleSelectedPlugin
+    )
 
 }
 
@@ -177,7 +184,7 @@ private fun PedalboardNavigationWrapper(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val isNavigationRailVisible = remember { mutableStateOf(true) }
+    //val isNavigationRailVisible = remember { mutableStateOf(true) }
 
     val navController = rememberNavController()
     val navigationActions = remember(navController) {
@@ -201,28 +208,28 @@ private fun PedalboardNavigationWrapper(
     // Change 3
     //if (navigationType == ReplyNavigationType.PERMANENT_NAVIGATION_DRAWER) {
     if (navigationType == PedalboardNavigationType.DISMISSIBLE_NAVIGATION_DRAWER) {
-        //val drawerState = drawerState//rememberDrawerState(DrawerValue.Open)
-        /*val drawerState = rememberDrawerState(DrawerValue.Closed)
-        val scope = rememberCoroutineScope()
-        val selectedItem = remember { mutableStateOf(TOP_LEVEL_DESTINATIONS[0]) }*/
-
-        //val scope = rememberCoroutineScope()
 
         // TODO check on custom width of PermanentNavigationDrawer: b/232495216
-        //Change5 Permanent > Dismis
-        //PermanentNavigationDrawer(drawerContent = {
-
-        // You can change NawDrawer gesture here
         DismissibleNavigationDrawer(drawerState = drawerState, drawerContent = {
-            // Change 5+
 
-            // TODO - move NavRail here
+                // TODO - move NavRail here?
 
 /*                PedalboardNavigationRail(
                     selectedDestination = selectedDestination,
                     navigationContentPosition = navigationContentPosition,
-                    navigateToTopLevelDestination = navigateToTopLevelDestination,
-                    onDrawerClicked = onDrawerClicked
+                    navigateToTopLevelDestination = navigationActions::navigateTo,
+                    onDrawerClicked = {
+                        if (drawerState.isOpen) {
+                            scope.launch {
+                                drawerState.close()
+                            }
+                        }
+                        else {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        }
+                    }
                 )*/
 
             DismissibleNavigationDrawerContent(
@@ -230,10 +237,9 @@ private fun PedalboardNavigationWrapper(
                 navigationContentPosition = navigationContentPosition,
                 navigateToTopLevelDestination = navigationActions::navigateTo,
                 drawerState = drawerState
-
-                // Need to close it by clicking on icon
             )
-        }) {
+        }
+        ) {
             PedalboardAppContent(
                 navigationType = navigationType,
                 contentType = contentType,
@@ -250,17 +256,14 @@ private fun PedalboardNavigationWrapper(
                     if (drawerState.isOpen) {
                         scope.launch {
                             drawerState.close()
-                            //isNavigationRailVisible.value = true
                         }
                     }
                     else {
                         scope.launch {
                             drawerState.open()
-                            //isNavigationRailVisible.value = false
                         }
                     }
                 },
-                //isNavigationRailVisible = isNavigationRailVisible.value
                 isNavigationRailVisible = true,//!(drawerState.isOpen || (drawerState.isClosed && drawerState.isAnimationRunning)),//(drawerState.isClosed) || (drawerState.isClosed && drawerState.isAnimationRunning),//drawerState.isAnimationRunning || drawerState.isClosed,
                 drawerState = drawerState
             )
@@ -358,9 +361,8 @@ fun PedalboardAppContent(
                 .background(MaterialTheme.colorScheme.inverseOnSurface)
         ) {
 
-            /* TODO - try to move Top App bar here
+            /** TODO - try to move Top App bar here
                 also - maybe it should be in NEW PedalboardTopNavHost??
-
              */
 
             //PedalboardTopBar(onDrawerClicked = {})
@@ -382,6 +384,9 @@ fun PedalboardAppContent(
                 )
             }
         }
+
+
+
     }
 }
 
