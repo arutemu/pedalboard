@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Pedalboard</string>
     <string name="navigation_drawer">Navigation Drawer</string>
+    <string name="quick_settings">Quick settings</string>
+    <string name="mixer">Mixer</string>
+    <string name="tuner">Tuner</string>
+    <string name="devices">Devices</string>
+    <string name="input_device">Input device</string>
+    <string name="output_device">Output device</string>
     <string name="tab_quick">Quick</string>
     <string name="tab_effects">Effects</string>
     <string name="tab_presets">Presets</string>

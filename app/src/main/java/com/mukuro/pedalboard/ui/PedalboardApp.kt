@@ -1,8 +1,6 @@
 package com.mukuro.pedalboard.ui
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,10 +19,8 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -182,7 +178,7 @@ private fun PedalboardNavigationWrapper(
     navigateToDetail: (Long, PedalboardContentType) -> Unit,
     toggleSelectedPlugin: (Long) -> Unit
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open) //Closed) // TODO - dont forget to change back! <<<
     val scope = rememberCoroutineScope()
     //val isNavigationRailVisible = remember { mutableStateOf(true) }
 
@@ -315,20 +311,8 @@ private fun PedalboardNavigationWrapper(
 
             PedalboardNavigationRail(
                 selectedDestination = selectedDestination,
-                navigationContentPosition = PedalboardNavigationContentPosition.CENTER ,
-                navigateToTopLevelDestination = navigationActions::navigateTo,
-                onDrawerClicked = {
-                    if (drawerState.isOpen) {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                    }
-                    else {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }
-                }
+                navigationContentPosition = PedalboardNavigationContentPosition.CENTER,
+                navigateToTopLevelDestination = navigationActions::navigateTo
             )
 
 

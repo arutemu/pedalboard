@@ -183,6 +183,9 @@ fun PedalboardPluginCard(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
             else if (isOpened) MaterialTheme.colorScheme.secondaryContainer // WTF
             else MaterialTheme.colorScheme.surfaceVariant
+        ),
+        elevation = CardDefaults.cardElevation( // Elevation is not visible here Y__Y Probably covered by top elements
+            defaultElevation = 6.dp
         )
     ) {
         var turnedOn: Boolean by rememberSaveable { mutableStateOf(true) } // TODO - change to rememberSavable if needed
