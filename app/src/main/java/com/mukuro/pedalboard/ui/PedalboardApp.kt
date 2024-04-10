@@ -222,7 +222,6 @@ private fun PedalboardNavigationWrapper(
                     // TODO check on custom width of PermanentNavigationDrawer: b/232495216
                     DismissibleNavigationDrawer(drawerState = drawerState, drawerContent = {
                         DismissibleNavigationDrawerContent(
-                            selectedDestination = selectedDestination,
                             navigationContentPosition = navigationContentPosition,
                             navigateToTopLevelDestination = navigationActions::navigateTo,
                             drawerState = drawerState
@@ -346,7 +345,7 @@ fun PedalboardAppContent(
     drawerState: DrawerState
 ) {
     //TEST STRING, feel free to delete
-    val scope = rememberCoroutineScope()
+    //val scope = rememberCoroutineScope()
     //val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     //Row(modifier = modifier.fillMaxSize()) {
