@@ -5,7 +5,11 @@ package com.mukuro.pedalboard.ui.navigation
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,18 +25,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MenuOpen
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PowerSettingsNew
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,8 +43,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.DismissibleDrawerSheet
@@ -50,6 +51,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Slider
@@ -73,6 +75,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.layoutId
@@ -81,7 +84,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
@@ -103,6 +105,16 @@ fun PedalboardNavigationRail(
     ) {
         // TODO - connect powerOn to actual engine start
         var powerOn: Boolean by rememberSaveable { mutableStateOf(false) }
+        var playbackOn: Boolean by rememberSaveable { mutableStateOf(false) }
+
+        // State value for small FABs
+        val state = remember {
+            MutableTransitionState(false).apply {
+                // Start the animation immediately.
+                targetState = true
+            }
+        }
+
         // TODO - remove custom nav rail positioning when NavRail component supports it. ticket : b/232495216
         Layout(
             modifier = Modifier.widthIn(max = 80.dp),
@@ -127,9 +139,12 @@ fun PedalboardNavigationRail(
                     )*/
                     val fabColor by animateColorAsState(if (powerOn) Color(0xFF5EC281) else Color(0xffc25e66), label = "Power State")
                     val iconColor by animateColorAsState(if (powerOn) Color(0xcc00643b) else Color(0xff871055), label = "Power State")
+                    val smallFabColor by animateColorAsState(if (powerOn) Color(0xFF5EC281) else Color(0xffc25e66), label = "Power State") // TODO - refactor + fix labels
+                    val smallIconColor by animateColorAsState(if (powerOn) Color(0xcc00643b) else Color(0xff871055), label = "Power State")
+                    // Power FAB
                     FloatingActionButton(
                         onClick = { powerOn = !powerOn },
-                        modifier = Modifier.padding(top = 8.dp, bottom = 32.dp),
+                        modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
                         containerColor = fabColor, //MaterialTheme.colorScheme.tertiaryContainer,
                         contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                     ) {
@@ -140,24 +155,52 @@ fun PedalboardNavigationRail(
                             tint = iconColor
                         )
                     }
+
+                    // Additional FAB (goes against recommendations, but it's NEEDED)
+                    // Also probably will rearrange all those actions in the future, as not every action is useful on the specific screen atm.
+                    when (selectedDestination) {
+                        PedalboardRoute.QUICK, PedalboardRoute.RECORDED, PedalboardRoute.DRUMS -> {
+                            PedalboardFAB(
+                                onClick = { playbackOn = !playbackOn },
+                                icon = if (playbackOn) { Icons.Default.Stop } else { Icons.Default.PlayArrow },
+                                iconName = "Playback"
+                            )
+                        }
+                        PedalboardRoute.EFFECTS -> {
+                            PedalboardFAB(
+                                onClick = { /*TODO*/ },
+                                icon = Icons.Default.Add,
+                                iconName = "Add plugin"
+                            )
+                        }
+                        PedalboardRoute.PRESETS -> {
+                            PedalboardFAB(
+                                onClick = { /*TODO*/ },
+                                icon = Icons.Default.Favorite,
+                                iconName = "Show favorite"
+                            )
+                        }
+                        else -> {}
+                    }
                     Spacer(Modifier.height(8.dp)) // NavigationRailHeaderPadding
                     Spacer(Modifier.height(4.dp)) // NavigationRailVerticalPadding
                 }
 
+                // TODO - replace replyDestination > pedalboardDestination
                 Column(
                     modifier = Modifier.layoutId(LayoutType.CONTENT),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    TOP_LEVEL_DESTINATIONS.forEach { replyDestination ->
+                    TOP_LEVEL_DESTINATIONS.forEach { pedalboardDestination ->
                         NavigationRailItem(
-                            selected = selectedDestination == replyDestination.route,
-                            onClick = { navigateToTopLevelDestination(replyDestination) },
+                            selected = selectedDestination == pedalboardDestination.route,
+                            onClick = { navigateToTopLevelDestination(pedalboardDestination) },
                             icon = {
                                 Icon(
-                                    imageVector = replyDestination.selectedIcon,
+                                    imageVector = pedalboardDestination.selectedIcon,
                                     contentDescription = stringResource(
-                                        id = replyDestination.iconTextId
+                                        id = pedalboardDestination.iconTextId
                                     )
                                 )
                             }
@@ -223,123 +266,6 @@ fun PedalboardBottomNavigationBar(
         }
     }
 }
-
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PermanentNavigationDrawerContent(
-    selectedDestination: String,
-    navigationContentPosition: ReplyNavigationContentPosition,
-    navigateToTopLevelDestination: (PedalboardTopLevelDestination) -> Unit,
-) {
-    PermanentDrawerSheet(modifier = Modifier.sizeIn(minWidth = 200.dp, maxWidth = 300.dp)) {
-        // TODO remove custom nav drawer content positioning when NavDrawer component supports it. ticket : b/232495216
-        Layout(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.inverseOnSurface)
-                .padding(16.dp),
-            content = {
-                Column(
-                    modifier = Modifier.layoutId(LayoutType.HEADER),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(16.dp),
-                        text = stringResource(id = R.string.app_name).uppercase(),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    ExtendedFloatingActionButton(
-                        onClick = { *//*TODO*//* },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, bottom = 40.dp),
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(id = R.string.edit),
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.compose),
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-
-                Column(
-                    modifier = Modifier
-                        .layoutId(LayoutType.CONTENT)
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    TOP_LEVEL_DESTINATIONS.forEach { replyDestination ->
-                        NavigationDrawerItem(
-                            selected = selectedDestination == replyDestination.route,
-                            label = {
-                                Text(
-                                    text = stringResource(id = replyDestination.iconTextId),
-                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                )
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = replyDestination.selectedIcon,
-                                    contentDescription = stringResource(
-                                        id = replyDestination.iconTextId
-                                    )
-                                )
-                            },
-                            colors = NavigationDrawerItemDefaults.colors(
-                                unselectedContainerColor = Color.Transparent
-                            ),
-                            onClick = { navigateToTopLevelDestination(replyDestination) }
-                        )
-                    }
-                }
-            },
-            measurePolicy = { measurables, constraints ->
-                lateinit var headerMeasurable: Measurable
-                lateinit var contentMeasurable: Measurable
-                measurables.forEach {
-                    when (it.layoutId) {
-                        LayoutType.HEADER -> headerMeasurable = it
-                        LayoutType.CONTENT -> contentMeasurable = it
-                        else -> error("Unknown layoutId encountered!")
-                    }
-                }
-
-                val headerPlaceable = headerMeasurable.measure(constraints)
-                val contentPlaceable = contentMeasurable.measure(
-                    constraints.offset(vertical = -headerPlaceable.height)
-                )
-                layout(constraints.maxWidth, constraints.maxHeight) {
-                    // Place the header, this goes at the top
-                    headerPlaceable.placeRelative(0, 0)
-
-                    // Determine how much space is not taken up by the content
-                    val nonContentVerticalSpace = constraints.maxHeight - contentPlaceable.height
-
-                    val contentPlaceableY = when (navigationContentPosition) {
-                        // Figure out the place we want to place the content, with respect to the
-                        // parent (ignoring the header for now)
-                        ReplyNavigationContentPosition.TOP -> 0
-                        ReplyNavigationContentPosition.CENTER -> nonContentVerticalSpace / 2
-                    }
-                        // And finally, make sure we don't overlap with the header.
-                        .coerceAtLeast(headerPlaceable.height)
-
-                    contentPlaceable.placeRelative(0, contentPlaceableY)
-                }
-            }
-        )
-    }
-}*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1145,7 +1071,7 @@ fun DismissibleNavigationDrawerContent( // TODO - remove obsolete stuff
                                             modifier = Modifier
                                                 .weight(0.5f)
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 6.dp),
+                                                .padding(horizontal = 8.dp),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             LinearProgressIndicator(
@@ -1192,7 +1118,7 @@ fun DismissibleNavigationDrawerContent( // TODO - remove obsolete stuff
                                             modifier = Modifier
                                                 .weight(0.5f)
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 6.dp),
+                                                .padding(horizontal = 8.dp),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             LinearProgressIndicator(
@@ -1626,6 +1552,40 @@ fun DismissibleNavigationDrawerContent( // TODO - remove obsolete stuff
 
         )
     }
+}
+
+@Composable
+fun PedalboardFAB(
+    onClick: () -> Unit,
+    //visibleState:  MutableTransitionState<Boolean>,
+    containerColor: Color = FloatingActionButtonDefaults.containerColor,
+    contentColor: Color = MaterialTheme.colorScheme.onTertiaryContainer,
+    icon: ImageVector,
+    iconName: String
+) {
+    val visibleState = remember { MutableTransitionState(false) }
+    visibleState.targetState = true
+    AnimatedVisibility(
+        visibleState = visibleState,
+        enter = scaleIn(),
+        exit = scaleOut()
+    )
+    {
+        FloatingActionButton(
+            onClick = onClick, //powerOn = !powerOn
+            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp), //.animatedBorder()
+            containerColor = containerColor,
+            contentColor = contentColor
+        ) {
+            Icon(
+                imageVector = icon, //Icons.Default.PlayArrow,
+                contentDescription = stringResource(id = R.string.power),
+                modifier = Modifier.size(18.dp),
+                tint = MaterialTheme.colorScheme.onTertiaryContainer //smallIconColor
+            )
+        }
+    }
+
 }
 
 /*fun SliderColors(inactiveTrackColor: Color): SliderColors {

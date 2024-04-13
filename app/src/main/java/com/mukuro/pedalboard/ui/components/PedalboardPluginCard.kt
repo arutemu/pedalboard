@@ -315,7 +315,7 @@ fun PedalboardPluginCard(
                         //.clip(CircleShape)
                         //.background(MaterialTheme.colorScheme.surface)
                     ) {
-                        val tint by animateColorAsState(if (turnedOn) Color(0xff8cff78) else Color(0xFFEC407A), label = "ON State")
+                        val tint by animateColorAsState(if (turnedOn) Color(0xFF5EC281) else Color(0xffc25e66), label = "ON State")
                         Icon(
                             imageVector = Icons.Default.RadioButtonChecked,
                             contentDescription = "Move vertically",

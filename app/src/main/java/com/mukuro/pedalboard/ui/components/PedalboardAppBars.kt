@@ -151,6 +151,8 @@ fun PluginDetailAppBar(
 @Composable
 fun PedalboardTopBar(
     modifier: Modifier = Modifier,
+    mainTitle: String = "Pedalboard",
+    subtitle: String = "On-board plugins",
     onDrawerClicked: () -> Unit = {} //onBackPressed: () -> Unit
 ) {
     TopAppBar(
@@ -173,13 +175,13 @@ fun PedalboardTopBar(
             ) {
                 // TODO - add dynamic titles for each app page (dunno how yet tho)
                 Text(
-                    text = "Pedal board",
+                    text = mainTitle,//"Pedal board",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    text = "On-board plugins",
+                    text = subtitle,//"On-board plugins",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline
                 )

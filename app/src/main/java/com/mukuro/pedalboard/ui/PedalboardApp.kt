@@ -178,9 +178,8 @@ private fun PedalboardNavigationWrapper(
     navigateToDetail: (Long, PedalboardContentType) -> Unit,
     toggleSelectedPlugin: (Long) -> Unit
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open) //Closed) // TODO - dont forget to change back! <<<
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    //val isNavigationRailVisible = remember { mutableStateOf(true) }
 
     val navController = rememberNavController()
     val navigationActions = remember(navController) {
@@ -189,29 +188,49 @@ private fun PedalboardNavigationWrapper(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val selectedDestination = navBackStackEntry?.destination?.route ?: PedalboardRoute.QUICK
 
+    lateinit var mainTitle : String
+    lateinit var subTitle : String
 
-    // TODO - move NavRail here
-    /*    PedalboardNavigationRail(
-            selectedDestination = selectedDestination,
-            navigationContentPosition = navigationContentPosition,
-            navigateToTopLevelDestination = navigateToTopLevelDestination,
-            onDrawerClicked = onDrawerClicked
-        )*/
-
+    when (selectedDestination) {
+        PedalboardRoute.QUICK -> {
+            mainTitle = "Pedalboard";
+            subTitle = "On-board plugins"
+        }
+        PedalboardRoute.EFFECTS -> {
+            mainTitle = "Library";
+            subTitle = "Available plugins"
+        }
+        PedalboardRoute.PRESETS -> {
+            mainTitle = "Presets";
+            subTitle = "Ready-to-go plugin presets"
+        }
+        PedalboardRoute.RECORDED -> {
+            mainTitle = "Records";
+            subTitle = "All recorder audios"
+        }
+        PedalboardRoute.DRUMS -> {
+            mainTitle = "Drums";
+            subTitle = "Backing tracks"
+        }
+    }
 
     Column(modifier = Modifier){
-        PedalboardTopBar(onDrawerClicked = {
-            if (drawerState.isOpen) {
-                scope.launch {
-                    drawerState.close()
+        PedalboardTopBar(
+            onDrawerClicked = {
+                if (drawerState.isOpen) {
+                    scope.launch {
+                        drawerState.close()
+                    }
                 }
-            }
-            else {
-                scope.launch {
-                    drawerState.open()
+                else {
+                    scope.launch {
+                        drawerState.open()
+                    }
                 }
-            }
-        })
+            },
+            mainTitle = mainTitle,
+            subtitle = subTitle
+        )
 
         Box(modifier = Modifier) {
 
