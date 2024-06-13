@@ -118,7 +118,7 @@ fun PedalboardAppPreview() {
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-@Preview(showBackground = true, widthDp = 700, heightDp = 500)
+@Preview(showBackground = true, widthDp = 1200, heightDp = 500)
 @Composable
 fun PedalboardAppPreviewTablet() {
     PedalboardTheme {
@@ -150,7 +150,7 @@ fun PedalboardAppPreviewDesktop() {
     PedalboardTheme {
         PedalboardApp(
             pedalboardHomeUIState = PedalboardHomeUIState(plugins = LocalPluginsDataProvider.allPlugins),
-            windowSize = WindowSizeClass.calculateFromSize(DpSize(500.dp, 700.dp)),
+            windowSize = WindowSizeClass.calculateFromSize(DpSize(1100.dp, 600.dp)),
             displayFeatures = emptyList(),
         )
     }
@@ -163,7 +163,7 @@ fun PedalboardAppPreviewDesktopPortrait() {
     PedalboardTheme {
         PedalboardApp(
             pedalboardHomeUIState = PedalboardHomeUIState(plugins = LocalPluginsDataProvider.allPlugins),
-            windowSize = WindowSizeClass.calculateFromSize(DpSize(500.dp, 700.dp)),
+            windowSize = WindowSizeClass.calculateFromSize(DpSize(600.dp, 1100.dp)),
             displayFeatures = emptyList(),
         )
     }

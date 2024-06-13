@@ -23,11 +23,13 @@ android {
 
     buildTypes {
         release {
+            manifestPlaceholders = [appName:"Pedalboard"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
         debug {
+            manifestPlaceholders = [appName:"Pedalboard DEBUG"]
             signingConfig signingConfigs.debug
             applicationIdSuffix ".dev"
         }

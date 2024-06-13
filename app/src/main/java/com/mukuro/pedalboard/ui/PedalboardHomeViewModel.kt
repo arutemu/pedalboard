@@ -31,6 +31,7 @@ class PedalboardHomeViewModel(private val pluginsRepository: PluginsRepository =
                     _uiState.value = PedalboardHomeUIState(error = ex.message)
                 }
                 .collect { plugins ->
+                    // TODO refactor - no need to select first plugin as open
                     /**
                      * We set first (email) plugin selected by default for first App launch in large-screens
                      */
@@ -41,7 +42,7 @@ class PedalboardHomeViewModel(private val pluginsRepository: PluginsRepository =
                 }
         }
     }
-
+    // TODO remove
     fun setOpenedPlugin(pluginId: Long, contentType: PedalboardContentType) {
         /**
          * We only set isDetailOnlyOpen to true when it's only single pane layout
@@ -53,6 +54,7 @@ class PedalboardHomeViewModel(private val pluginsRepository: PluginsRepository =
         )
     }
 
+    // TODO remove OR change
     fun toggleSelectedPlugin(pluginId: Long) {
         val currentSelection = uiState.value.selectedPlugins
         _uiState.value = _uiState.value.copy(
