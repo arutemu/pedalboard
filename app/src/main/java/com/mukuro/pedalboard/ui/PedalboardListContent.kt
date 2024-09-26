@@ -8,29 +8,40 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -50,6 +61,11 @@ import com.google.accompanist.adaptive.TwoPane
 import com.mukuro.pedalboard.data.Plugin
 import com.mukuro.pedalboard.ui.utils.PedalboardContentType
 import com.mukuro.pedalboard.ui.utils.PedalboardNavigationType
+import my.nanihadesuka.compose.InternalLazyRowScrollbar
+import my.nanihadesuka.compose.LazyRowScrollbar
+import my.nanihadesuka.compose.ScrollbarLayoutSide
+import my.nanihadesuka.compose.ScrollbarSelectionMode
+import my.nanihadesuka.compose.ScrollbarSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -232,41 +248,78 @@ fun PedalboardPluginsList(
 
 
     // changed from COLUMN to ROW, let's check it
-    Column() {
+    Column(
+        modifier = modifier
+            //.padding(horizontal = 12.dp)
+            .clip(shape = RoundedCornerShape(36.dp, 0.dp, 0.dp, 0.dp))
+            .background(MaterialTheme.colorScheme.surfaceDim)
+    ) {
         // Insert Top Bar here? or not here?
         //PedalboardSearchBar(modifier = Modifier.fillMaxWidth()) // And replace this shit!
         //PedalboardTopBar(modifier = Modifier.fillMaxWidth(), onBackPressed = {}) // TODO - remove it from here? probably? Found a better place for it already :3
         // For Glide
-        val state = rememberLazyListState()
 
-        LazyRow(
-            modifier = modifier
-                .clip(shape = RoundedCornerShape(36.dp, 0.dp, 0.dp, 0.dp))
-                .background(MaterialTheme.colorScheme.surfaceDim), // color is fucked after libs update
+        val state = rememberLazyListState()
+        // Values for Scrollbar
+        val listData = (0..1000).toList()
+        //val listState = rememberLazyListState()
+/*        LazyRowScrollbar(
+            state = pluginLazyListState,
+            settings = ScrollbarSettings(
+                selectionMode = ScrollbarSelectionMode.Full,
+                side = ScrollbarLayoutSide.End,
+                alwaysShowScrollbar = true,
+                //scrollbarPadding = 12.dp,
+                //thumbThickness = 12.dp,
+                thumbMinLength = 0.2f
+            )
+        ) {*/
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxHeight(fraction = 0.95f),
+                /*modifier = modifier
+                    .clip(shape = RoundedCornerShape(36.dp, 0.dp, 0.dp, 0.dp))
+                    .background(MaterialTheme.colorScheme.surfaceDim), */// color is fucked after libs update
                 //.padding(vertical = 12.dp),
-            contentPadding = PaddingValues(
-                start = 24.dp,
-                end = 24.dp
-            ),
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-            state = pluginLazyListState) {
+                contentPadding = PaddingValues(
+                    start = 24.dp,
+                    end = 24.dp
+                ),
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                state = pluginLazyListState
+            ) {
 /*        item {
             PedalboardSearchBar(modifier = Modifier.fillMaxWidth())
         }*/
-            items(items = plugins, key = { it.id }) { plugin ->
-                PedalboardPluginCard(
-                    plugin = plugin,
-                    navigateToDetail = { pluginId ->
-                        navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)
-                    },
-                    toggleSelection = togglePluginSelection,
-                    isOpened = openedPlugin?.id == plugin.id,
-                    isSelected = selectedPluginIds.contains(plugin.id)
-                )
+                items(items = plugins, key = { it.id }) { plugin ->
+                    PedalboardPluginCard(
+                        plugin = plugin,
+                        navigateToDetail = { pluginId ->
+                            navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)
+                        },
+                        toggleSelection = togglePluginSelection,
+                        isOpened = openedPlugin?.id == plugin.id,
+                        isSelected = selectedPluginIds.contains(plugin.id)
+                    )
+                }
             }
+            InternalLazyRowScrollbar(
+                modifier = Modifier
+                    //.fillMaxHeight()
+                    .padding(horizontal = 24.dp),
+                state = pluginLazyListState,
+                settings = ScrollbarSettings(
+                    selectionMode = ScrollbarSelectionMode.Full,
+                    side = ScrollbarLayoutSide.End,
+                    alwaysShowScrollbar = true,
+                    //scrollbarPadding = 12.dp,
+                    //thumbThickness = 36.dp,
+                    thumbMinLength = 0.3f
+                )
+            )
         }
 
-    }
+    //}
 }
 
 @Composable
@@ -354,5 +407,19 @@ fun ImageLoader(plugin: Plugin) {
         contentDescription = "cover image",
         contentScale = ContentScale.Fit,
         modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+fun Scrollbar() {
+    Card(
+        modifier = Modifier
+            .height(16.dp)
+            .width(120.dp)
+            .padding(vertical = 20.dp)
+            .clip(CardDefaults.shape),
+        colors = CardDefaults.cardColors(),
+        elevation = CardDefaults.cardElevation(),
+        content = {}
     )
 }

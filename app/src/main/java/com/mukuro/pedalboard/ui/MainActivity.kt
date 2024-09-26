@@ -99,6 +99,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /** TODO implement Palettes loading here
+    *
+    * */
+    fun loadPalettes() {}
+
 /*    fun context(): Context {
         return MainActivity.getApplicationContext()
     }*/

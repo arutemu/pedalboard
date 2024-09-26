@@ -1,11 +1,12 @@
 package com.mukuro.pedalboard.ui.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -54,8 +55,8 @@ TODO
 val TOP_LEVEL_DESTINATIONS = listOf(
     PedalboardTopLevelDestination(
         route = PedalboardRoute.QUICK,
-        selectedIcon = Icons.Default.AddCircle,
-        unselectedIcon = Icons.Default.AddCircle,
+        selectedIcon = Icons.Default.PlayCircle,
+        unselectedIcon = Icons.Default.PlayCircle,
         iconTextId = R.string.tab_quick
     ),
     PedalboardTopLevelDestination(
@@ -66,14 +67,14 @@ val TOP_LEVEL_DESTINATIONS = listOf(
     ),
     PedalboardTopLevelDestination(
         route = PedalboardRoute.PRESETS,
-        selectedIcon = Icons.Outlined.ArrowForward,
-        unselectedIcon = Icons.Outlined.ArrowForward,
+        selectedIcon = Icons.AutoMirrored.Outlined.ArrowForward,
+        unselectedIcon = Icons.AutoMirrored.Outlined.ArrowForward,
         iconTextId = R.string.tab_presets
     ),
     PedalboardTopLevelDestination(
         route = PedalboardRoute.RECORDED,
-        selectedIcon = Icons.Default.ArrowBack,
-        unselectedIcon = Icons.Default.ArrowBack,
+        selectedIcon = Icons.AutoMirrored.Filled.ArrowBack,
+        unselectedIcon = Icons.AutoMirrored.Filled.ArrowBack,
         iconTextId = R.string.tab_recorded
     ),
     PedalboardTopLevelDestination(

@@ -1,6 +1,7 @@
 package com.mukuro.pedalboard.data
 
 import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
@@ -12,7 +13,7 @@ data class Plugin(
     val name: String,
     val aspectRatio: Float,
     val elements: List<PluginElement?>,
-    val coverDrawable: Int? = null,
+    @DrawableRes val coverDrawable: Int? = null,
     val horizontal: Arrangement.Horizontal? = Arrangement.Center,
     val vertical: Arrangement.Vertical? = Arrangement.Top
 )

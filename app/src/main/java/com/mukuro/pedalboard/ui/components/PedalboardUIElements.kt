@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 class PedalboardUIElements {
 }
 
+// TODO - refactor, finish, use?
 @Composable
 fun Modifier.animatedBorder(
     borderColors: List<Color>,

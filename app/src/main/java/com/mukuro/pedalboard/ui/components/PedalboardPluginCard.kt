@@ -224,7 +224,8 @@ fun PedalboardPluginCard(
             }*/
 
             // Coil Image element
-            plugin.coverDrawable?.let {
+            // TODO - disabled for TESTING PURPOSES till line 258
+/*            plugin.coverDrawable?.let {
                 // Draw image
                 AsyncImage(
                     model = plugin.coverDrawable,
@@ -236,14 +237,14 @@ fun PedalboardPluginCard(
                 )
                 // TODO - reenable?
                 // Generate palette
-                /*val bitmap = remember {
+                *//*val bitmap = remember {
                     BitmapFactory.decodeResource(
                         context.resources,
                         plugin.coverDrawable
                     )
-                }*/
+                }*//*
 
-                /* Create the Palette, pass the bitmap to it *//*
+                *//* Create the Palette, pass the bitmap to it *//**//*
                 //val palette = remember { Palette.from(bitmap).generate() }
                 val palette = remember {
                     Palette.from(bitmap).generate()
@@ -252,8 +253,8 @@ fun PedalboardPluginCard(
                 colorArray[0] = palette.vibrantSwatch?.let { Color(it.rgb) } ?: Color.DarkGray
                 colorArray[1] = palette.darkVibrantSwatch?.let { Color(it.rgb) } ?: Color.LightGray
                 colorArray[2] = palette.darkMutedSwatch?.let { Color(it.rgb) } ?: Color.Red
+            }*//*
             }*/
-            }
 
             // TODO - part of background image implementation. Waiting for a proper refactor
             //val imageResource = getCardImageResource(plugin.name)
