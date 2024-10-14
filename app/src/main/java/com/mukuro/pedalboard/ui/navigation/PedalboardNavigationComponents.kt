@@ -11,6 +11,7 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -54,7 +57,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Slider
+//import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SliderState
 import androidx.compose.material3.Switch
@@ -65,6 +68,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -85,10 +89,13 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import androidx.compose.ui.unit.sp
 import com.mukuro.pedalboard.R
+import com.mukuro.pedalboard.ui.components.CustomSlider
+//import com.mukuro.pedalboard.ui.components.Slider
 import com.mukuro.pedalboard.ui.utils.PedalboardNavigationContentPosition
 import kotlinx.coroutines.launch
 
@@ -295,6 +302,11 @@ fun ModalNavigationDrawerContent(
     var expandedOutput by remember { mutableStateOf(false) }
     var selectedOutput by remember { mutableStateOf(inputOptions[0]) }
 
+    // TEST values for sliders
+    var value by remember { mutableFloatStateOf(.5f) }
+    var sliderPosition by remember { mutableStateOf(0f) }
+    val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+
     ModalDrawerSheet {
         // TODO remove custom nav drawer content positioning when NavDrawer component supports it. ticket : b/232495216
         Layout(
@@ -419,7 +431,7 @@ fun ModalNavigationDrawerContent(
                                         ) {
                                             LinearProgressIndicator(
                                                 progress = { currentInput },
-                                                color = Color(0xFF5EC281), //ProgressIndicatorDefaults.linearColor,
+                                                color = Color(0xff13b64d), //ProgressIndicatorDefaults.linearColor,
                                                 trackColor = MaterialTheme.colorScheme.surfaceBright,
                                                 modifier = Modifier.fillMaxWidth(),
                                                 strokeCap = StrokeCap.Round
@@ -432,11 +444,20 @@ fun ModalNavigationDrawerContent(
                                                 .fillMaxWidth(),
                                             contentAlignment = Alignment.Center
                                         ) {
-                                            Slider(
+
+/*                                            Slider(
                                                 modifier = Modifier.fillMaxWidth(),
                                                 state = SliderState(1f),
-                                                colors = SliderDefaults.colors(inactiveTrackColor = MaterialTheme.colorScheme.surfaceBright)
-                                            )
+                                                colors = SliderDefaults
+                                                    .colors(inactiveTrackColor = MaterialTheme.colorScheme.surfaceBright),
+                                                // TODO - remove this part, default thumb is not customizable in M3
+                                                thumb = {
+                                                    SliderDefaults.Thumb(
+                                                        thumbSize = DpSize(width = 16.dp, height = 16.dp),
+                                                        interactionSource = remember { MutableInteractionSource() }
+                                                        )
+                                                }
+                                            )*/
                                         }
                                     }
 
@@ -479,11 +500,11 @@ fun ModalNavigationDrawerContent(
                                                 .fillMaxWidth(),
                                             contentAlignment = Alignment.Center
                                         ) {
-                                            Slider(
+/*                                            Slider(
                                                 modifier = Modifier.fillMaxWidth(),
                                                 state = SliderState(1f),
                                                 colors = SliderDefaults.colors(inactiveTrackColor = MaterialTheme.colorScheme.surfaceBright)
-                                            )
+                                            )*/
                                         }
 
                                     }
@@ -950,6 +971,9 @@ fun DismissibleNavigationDrawerContent( // TODO - remove obsolete stuff
     var expandedOutput by remember { mutableStateOf(false) }
     var selectedOutput by remember { mutableStateOf(inputOptions[0]) }
 
+    // Experimental stuff for Sliders
+    var value by remember { mutableFloatStateOf(.5f) }
+
 
     DismissibleDrawerSheet() { //// Want to make it smaller, but UI gets fucked then, fix it then add >>> modifier = Modifier.requiredWidth(300.dp)
         // TODO remove custom nav drawer content positioning when NavDrawer component supports it. ticket : b/232495216
@@ -1089,7 +1113,7 @@ fun DismissibleNavigationDrawerContent( // TODO - remove obsolete stuff
                                                 .fillMaxWidth(),
                                             contentAlignment = Alignment.Center
                                         ) {
-                                            Slider(
+                                            CustomSlider(
                                                 modifier = Modifier.fillMaxWidth(),
                                                 state = SliderState(1f),
                                                 colors = SliderDefaults.colors(inactiveTrackColor = MaterialTheme.colorScheme.surfaceBright)
@@ -1136,7 +1160,7 @@ fun DismissibleNavigationDrawerContent( // TODO - remove obsolete stuff
                                                 .fillMaxWidth(),
                                             contentAlignment = Alignment.Center
                                         ) {
-                                            Slider(
+                                            CustomSlider(
                                                 modifier = Modifier.fillMaxWidth(),
                                                 state = SliderState(1f),
                                                 colors = SliderDefaults.colors(inactiveTrackColor = MaterialTheme.colorScheme.surfaceBright)

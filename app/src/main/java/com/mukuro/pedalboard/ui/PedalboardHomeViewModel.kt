@@ -77,6 +77,13 @@ class PedalboardHomeViewModel(private val pluginsRepository: PluginsRepository =
             openedPreset = preset,
         )
     }*/
+    fun closeQuickMenu() {
+        _uiState.value = _uiState
+            .value.copy(
+                isDetailOnlyOpen = false,
+                //openedPlugin = _uiState.value.plugins.first()
+            )
+    }
 
     // TODO - implement adding plugin to the board
     fun addPlugin(pluginId: Long) {}

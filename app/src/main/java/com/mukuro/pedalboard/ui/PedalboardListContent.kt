@@ -2,6 +2,7 @@ package com.mukuro.pedalboard.ui
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -250,7 +251,7 @@ fun PedalboardPluginsList(
     // changed from COLUMN to ROW, let's check it
     Column(
         modifier = modifier
-            //.padding(horizontal = 12.dp)
+            //.padding(horizontal = 12.dp) // TODO - need to make the clip modifier to be used only on tablets
             .clip(shape = RoundedCornerShape(36.dp, 0.dp, 0.dp, 0.dp))
             .background(MaterialTheme.colorScheme.surfaceDim)
     ) {
@@ -294,10 +295,6 @@ fun PedalboardPluginsList(
                 items(items = plugins, key = { it.id }) { plugin ->
                     PedalboardPluginCard(
                         plugin = plugin,
-                        navigateToDetail = { pluginId ->
-                            navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)
-                        },
-                        toggleSelection = togglePluginSelection,
                         isOpened = openedPlugin?.id == plugin.id,
                         isSelected = selectedPluginIds.contains(plugin.id)
                     )
@@ -305,8 +302,8 @@ fun PedalboardPluginsList(
             }
             InternalLazyRowScrollbar(
                 modifier = Modifier
-                    //.fillMaxHeight()
-                    .padding(horizontal = 24.dp),
+                    .fillMaxHeight(),
+                    //.padding(horizontal = 24.dp),
                 state = pluginLazyListState,
                 settings = ScrollbarSettings(
                     selectionMode = ScrollbarSelectionMode.Full,
@@ -315,7 +312,9 @@ fun PedalboardPluginsList(
                     //scrollbarPadding = 12.dp,
                     //thumbThickness = 36.dp,
                     thumbMinLength = 0.3f
-                )
+                ),
+                // TODO - implement custom indicatorContent for custom scrollbar design :3
+                //indicatorContent = Scrollbar()
             )
         }
 
@@ -361,10 +360,6 @@ fun PedalboardAllPluginsList(
             items(items = plugins, key = { it.id }) { plugin ->
                 PedalboardPluginCard(
                     plugin = plugin,
-                    navigateToDetail = { pluginId ->
-                        navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)
-                    },
-                    toggleSelection = togglePluginSelection,
                     isOpened = openedPlugin?.id == plugin.id,
                     isSelected = selectedPluginIds.contains(plugin.id)
                 )
@@ -410,13 +405,14 @@ fun ImageLoader(plugin: Plugin) {
     )
 }
 
+// OLD STUFF, DOES NOT WORK, IS NOT USED, REMOVE IT!
 @Composable
 fun Scrollbar() {
     Card(
         modifier = Modifier
             .height(16.dp)
             .width(120.dp)
-            .padding(vertical = 20.dp)
+            .padding(vertical = 8.dp)
             .clip(CardDefaults.shape),
         colors = CardDefaults.cardColors(),
         elevation = CardDefaults.cardElevation(),

@@ -12,6 +12,7 @@
     <string name="tab_presets">Presets</string>
     <string name="tab_recorded">Recorded</string>
     <string name="tab_drums">Drums</string>
+    <string name="test">Test</string>
 
     // to modify further
     <string name="profile">Profile</string>

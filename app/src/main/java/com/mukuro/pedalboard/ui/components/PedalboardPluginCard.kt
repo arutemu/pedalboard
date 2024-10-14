@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -55,6 +56,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -77,14 +79,18 @@ import com.mukuro.pedalboard.data.Plugin
 import kotlin.math.cos
 import kotlin.math.sin
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
 import com.mukuro.pedalboard.R
 import com.mukuro.pedalboard.data.Knob
+import com.mukuro.pedalboard.ui.components.plugin.PluginKnob
 import com.mukuro.pedalboard.data.RangeSlider
 import com.mukuro.pedalboard.data.Slider
 import com.mukuro.pedalboard.data.Switch
 import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
+import com.mukuro.pedalboard.ui.components.plugin.NeuroPluginKnob
+import com.mukuro.pedalboard.ui.components.plugin.PluginSlider
 
 /**
  * TODO
@@ -107,8 +113,8 @@ import com.mukuro.pedalboard.data.local.LocalPluginsDataProvider
 @Composable
 fun PedalboardPluginCard(
     plugin: Plugin,
-    navigateToDetail: (Long) -> Unit,
-    toggleSelection: (Long) -> Unit,
+    //navigateToDetail: (Long) -> Unit,
+    //toggleSelection: (Long) -> Unit,
     modifier: Modifier = Modifier,
     isOpened: Boolean = false,
     isSelected: Boolean = false,
@@ -193,6 +199,15 @@ fun PedalboardPluginCard(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.surface,
+                            MaterialTheme.colorScheme.surfaceVariant,
+                        )
+                    ),
+                    shape = RectangleShape
+                )
             // Possible draw_behind implementation
 /*                .drawBehind {
                     drawIntoCanvas { canvas ->
@@ -237,12 +252,15 @@ fun PedalboardPluginCard(
                 )
                 // TODO - reenable?
                 // Generate palette
-                *//*val bitmap = remember {
+                val bitmap = remember {
                     BitmapFactory.decodeResource(
                         context.resources,
                         plugin.coverDrawable
                     )
-                }*//*
+                }
+            }*/
+
+            /*
 
                 *//* Create the Palette, pass the bitmap to it *//**//*
                 //val palette = remember { Palette.from(bitmap).generate() }
@@ -373,6 +391,7 @@ fun PedalboardPluginCard(
                         //.fillMaxWidth()
                         .fillMaxSize()
                         .padding(4.dp), // 4-8 is ok
+                        //.align(Alignment.CenterVertically), // TODO - why isn't this working? MUST MORE BLOOD BE SHED?!11
                     horizontalArrangement = plugin.horizontal ?: Arrangement.Center,
                     //verticalArrangement = plugin.vertical ?: Arrangement.Top, //Arrangement.Center, //Arrangement.Absolute.SpaceEvenly, //.spacedBy(4.dp),
                     maxItemsInEachRow = maxItemsCount //3
@@ -388,9 +407,9 @@ fun PedalboardPluginCard(
                      */
                     plugin.elements?.forEach {
                         when (it) {
-                            is Knob -> PluginKnob(
+                            is Knob -> NeuroPluginKnob(
                                 it,
-                                knobSize = 100f,
+                                knobSize = 80f, //100f - (it.id - 1f) * 10f, // < -- Stuff to check dynamic sizes
                                 onValueChanged = { value ->
                                     /* Placeholder code for handling volume change
                                     * Put here some action if needed in the future.
@@ -398,11 +417,22 @@ fun PedalboardPluginCard(
                                     */
                                     println(it.name+" changed: $value")},
                                 value = 1f,
-                                modifier = Modifier.size(height = 150.dp, width = 120.dp),
+                                //modifier = Modifier.size(height = 150.dp, width = 120.dp), // TODO - wtf, remove this!!
                                 colors = colorArray// Let's settle for this size for now .____.
                                 )
                             is Switch -> {}
-                            is Slider -> {}
+                            is Slider -> { PluginSlider(
+                                it,
+                                onValueChanged = { value ->
+                                    /* Placeholder code for handling volume change
+                                    * Put here some action if needed in the future.
+                                    * Right now only prints logs on change.
+                                    */
+                                    println(it.name+" changed: $value")},
+                                value = 1f,
+                                //colors = colorArray
+                            )
+                            }
                             is RangeSlider -> {}
 
                             // TODO - add final elements
@@ -418,180 +448,7 @@ fun PedalboardPluginCard(
     }
 }
 
-/** Small lerp function, cuz I found no easier way to map value from (0..1) to (min..max)
- *   WTF, there is no built-in lerp function? or am I stupid? (not hehe)
- *   TODO - refactor, maybe this additional func is overkill
- */
-fun Float.mapRange(
-    fromMin: Float,
-    fromMax: Float,
-    toMin: Float,
-    toMax: Float
-): Float {
-    if (fromMin == fromMax) {
-        throw IllegalArgumentException("Input range cannot have equal min and max values")
-    }
 
-    val clampedValue = this.coerceIn(fromMin, fromMax)
-    return (clampedValue - fromMin) * (toMax - toMin) / (fromMax - fromMin) + toMin
-}
-
-@Composable
-fun PluginKnob(
-    knob: Knob,
-    modifier: Modifier = Modifier,
-    knobSize: Float = 100f,
-    knobColor: Color = Color.DarkGray,
-    indicatorColor: Color = Color.LightGray,
-    onValueChanged: (Float) -> Unit,
-    value: Float = 0f,
-    colors: Array<Color>? = null
-    //content: @Composable () -> Unit // TODO - probably remove, don't think it may be needed here in the future
-) {
-    val startPosition : Float = (value * (knob.endPoint - knob.startPoint) / 360) // TODO fix calculation
-    var angle: Float by rememberSaveable { mutableStateOf(startPosition) }
-
-    Column(
-        modifier = modifier
-            .wrapContentSize()
-            .pointerInput(Unit) { // Probably a good idea is to change the gesture to .draggable
-                detectDragGestures { change, _ ->
-                    val dragDistance = change.position - change.previousPosition
-                    angle += dragDistance.x / (8 * knobSize)
-                    angle = angle.coerceIn(0f, 1f)
-                    onValueChanged((angle * 2) - 1) // Map the angle to the range from -1 to 1
-                }
-            }
-    ) {
-        Text( // Current knob value
-            text = "%.1f".format(angle.mapRange(0f,1f, knob.startPoint, knob.endPoint)).toFloat().toString()+knob.measure,
-            color = colors?.get(0) ?: Color.DarkGray,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth(fraction = 0.45f)
-                 // would be good to add some outline here like in commented lines
-                //.clip(CircleShape)
-                .padding(top = 4.dp, bottom = 4.dp)
-                //.alpha(0.5f)
-                .background(color = (colors?.get(1) ?: knobColor), shape = RoundedCornerShape(size = 12.dp))
-                .align(Alignment.CenterHorizontally),
-            //.wrapContentSize(Alignment.TopCenter, unbounded = false),
-            maxLines = 1,
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Medium //FontWeight.Medium
-            //, fontSize = 12.sp)
-        )
-        Box(
-            modifier = Modifier
-                //.fillMaxWidth(fraction = 0.8f)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Canvas(
-                modifier = Modifier
-                    .fillMaxSize(fraction = 0.6f)
-                    .aspectRatio(1f)// sizeIn(minWidth = 100.dp, minHeight = 100.dp, maxWidth = 120.dp, maxHeight = 120.dp) //.fillMaxSize() //fraction = 0.8f)
-            ) {
-                val centerX = size.width / 2
-                val centerY = size.height / 2
-                val radius = size.minDimension / 2 - 8.dp.toPx()
-
-                // Draw the filled knob circle
-                drawCircle(
-                    color = colors?.get(1) ?: knobColor, //?: knobColor,
-                    center = Offset(centerX, centerY),
-                    radius = radius
-                )
-
-                // Draw the indicator circle
-                // THIS IS STUPID SHIT (but somehow it's working... at least partially)
-                val indicatorRadius = radius * 0.2f
-                val angleOffset = 60 // Offset the angle by 150 degrees to start at 7 and end at 5
-                val angleInDegrees = (angle * 360) / 1.2f //.coerceIn(0f, 300f) // SOMETHING FISHY HERE // MY CODE // FIXED EHHEHEHE :3
-                val indicatorOffsetX = (radius - indicatorRadius) * cos(Math.toRadians(angleInDegrees.toDouble()-angleOffset.toDouble())).toFloat()
-                val indicatorOffsetY = (radius - indicatorRadius) * sin(Math.toRadians(angleInDegrees.toDouble()-angleOffset.toDouble())).toFloat()
-                val indicatorCenterX = centerX - indicatorOffsetX
-                val indicatorCenterY = centerY - indicatorOffsetY // Invert the Y-axis to start from the top
-
-                val pointerLeftX = centerX + (cos(Math.toRadians(254.0)).toFloat() * (radius * 1.28f))
-                val pointerY = centerY - (sin(Math.toRadians(254.0)).toFloat() * (radius * 1.28f))
-                val pointerRightX = centerX - (cos(Math.toRadians(254.0)).toFloat() * (radius * 1.28f))
-
-                val colorStops = arrayOf(
-                    0.0f to Color.LightGray, //DarkGray,
-                    0.16f to Color.Red,
-                    0.33f to Color.LightGray,
-                    0.75f to Color.LightGray //DarkGray
-                )
-                // Left marker
-                drawCircle(
-                    color = colors?.get(1) ?: Color.LightGray,
-                    center = Offset(pointerLeftX,pointerY),
-                    radius = 4f
-                )
-                // Right marker
-                drawCircle(
-                    color = colors?.get(1) ?: Color.LightGray,
-                    center = Offset(pointerRightX,pointerY),
-                    radius = 4f
-                )
-                // Arc indicator around the Knob
-                drawArc(
-                    brush = Brush.sweepGradient(colorStops = colorStops), // listOf(Color.LightGray, Color.Magenta, Color.Red),
-                    startAngle = 120f,
-                    sweepAngle = angleInDegrees,
-                    useCenter = false,
-                    style = Stroke(width = 5f, cap = StrokeCap.Round)
-                )
-                // Indicator on the Knob
-                drawCircle(
-                    color = colors?.get(0) ?: indicatorColor,
-                    center = Offset(indicatorCenterX, indicatorCenterY),
-                    radius = indicatorRadius * 0.5f
-                )
-            }
-        }
-        Text(
-            text = knob.name,
-            color = colors?.get(0) ?: Color.DarkGray,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth(fraction = 0.5f)
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 4.dp, bottom = 4.dp)
-                .background(color = (colors?.get(1) ?: knobColor), shape = RoundedCornerShape(size = 30.dp)),
-            //style = TextStyle(color = Color.Black, fontSize = 12.sp, fontWeight = FontWeight.Bold),
-            style = MaterialTheme.typography.labelMedium //titleMedium //.merge(
-                /* TextStyle(color = colors?.get(1) ?: Color.DarkGray,
-                    //fontSize = 80.sp,
-                    drawStyle = Stroke(
-                        miter = 10f,
-                        width = 2f,
-                        join = StrokeJoin.Round
-                    )
-                )
-            )*/,
-            maxLines = 1,
-            //fontWeight = FontWeight.ExtraBold
-        )
-    }
-}
-
-// TODO - WIP - barely started
-@Composable
-fun PluginSlider(
-    slider: Slider,
-    modifier: Modifier = Modifier,
-    sliderColor: Color = Color.DarkGray,
-    indicatorColor: Color = Color.LightGray,
-    onValueChanged: (Float) -> Unit,
-    value: Float = 0f
-    //content: @Composable () -> Unit // TODO - probably remove, don't think it may be needed here in the future
-) {
-    val startPosition : Float = (value * (slider.endValue - slider.startValue) / 360) // TODO fix calculation
-    var point: Float by rememberSaveable { mutableStateOf(startPosition) }
-
-
-}
 
 
 /*fun getCardImageResource(stringData: String): Int? {
@@ -604,40 +461,33 @@ fun PluginSlider(
         else -> null
     }
 }*/
-
+@PreviewLightDark
 @Preview(showBackground = false, heightDp = 600)
 @Composable
 fun PedalboardTabletCardPreview() {
     PedalboardPluginCard(
         plugin = LocalPluginsDataProvider.allPlugins[1],
-        navigateToDetail = { /*pluginId ->
-            navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)*/
-        },
-        toggleSelection = {}, //togglePluginSelection,
         isOpened = false, //openedPlugin?.id == plugin.id,
         isSelected = false //selectedPluginIds.contains(plugin.id)
     )
 }
 
-@Preview(showBackground = false, widthDp = 400, heightDp = 600)
+@PreviewLightDark
+@Preview(showBackground = false, widthDp = 400, heightDp = 700)
 @Composable
 fun PedalboardMobileCardPreview() {
     PedalboardPluginCard(
         plugin = LocalPluginsDataProvider.allPlugins[1],
-        navigateToDetail = { /*pluginId ->
-            navigateToDetail(pluginId, PedalboardContentType.SINGLE_PANE)*/
-        },
-        toggleSelection = {}, //togglePluginSelection,
         isOpened = false, //openedPlugin?.id == plugin.id,
         isSelected = false //selectedPluginIds.contains(plugin.id)
     )
 }
 
-@Preview(showBackground = false, widthDp = 200, heightDp = 200)
+/*@Preview(showBackground = false, widthDp = 200, heightDp = 200)
 @Composable
 fun PedalboardSmallKnobPreview() {
     PluginKnob(
-        knob = LocalPluginsDataProvider.TestKnob.knobSet1[3],
+        knob = LocalPluginsDataProvider.TestKnob.knobSet1[2],
         modifier = Modifier.size(200.dp),
         knobSize = 200f,
         //knobName = "Gain 2",
@@ -682,7 +532,7 @@ fun PedalboardBigKnobPreview() {
             println("Volume changed: $value")
         }
     )
-}
+}*/
 
 
 
