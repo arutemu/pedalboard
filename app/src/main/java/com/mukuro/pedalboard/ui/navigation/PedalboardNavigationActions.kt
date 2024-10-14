@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Moped
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.Star
@@ -19,6 +20,7 @@ object PedalboardRoute {
     const val PRESETS = "Presets"
     const val RECORDED = "Recorded"
     const val DRUMS = "Drums"
+    const val TEST = "TEST"
 }
 
 data class PedalboardTopLevelDestination(
@@ -82,6 +84,12 @@ val TOP_LEVEL_DESTINATIONS = listOf(
         selectedIcon = Icons.Default.Star,
         unselectedIcon = Icons.Default.Star,
         iconTextId = R.string.tab_drums
+    ),
+    PedalboardTopLevelDestination(
+        route = PedalboardRoute.TEST,
+        selectedIcon = Icons.Default.Moped,
+        unselectedIcon = Icons.Default.Moped,
+        iconTextId = R.string.test
     )
 
 )

@@ -60,7 +60,7 @@ android {
 }
 
 dependencies {
-    def nav_version = "2.8.1"
+    def nav_version = "2.8.2"
     def lifecycle_version = "2.8.6"
     def accompanist = '0.36.0'
 
@@ -98,7 +98,7 @@ dependencies {
     // palette
     implementation 'androidx.palette:palette-ktx:1.0.0'
 
-    implementation platform('androidx.compose:compose-bom:2024.09.02')
+    implementation platform('androidx.compose:compose-bom:2024.09.03')
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
@@ -111,7 +111,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    androidTestImplementation platform('androidx.compose:compose-bom:2024.09.02')
+    androidTestImplementation platform('androidx.compose:compose-bom:2024.09.03')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
@@ -125,4 +125,8 @@ dependencies {
 
     // LazyList scrollbar
     implementation 'com.github.nanihadesuka:LazyColumnScrollbar:2.2.0'
+
+    // Android Wear libs for rounded/radial text
+    //implementation "androidx.wear.compose:compose-material:1.4.0"
+    //implementation "androidx.wear.compose:compose-foundation:1.4.0"
 }

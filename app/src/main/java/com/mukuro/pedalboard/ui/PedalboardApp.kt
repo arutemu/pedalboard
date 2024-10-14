@@ -212,6 +212,10 @@ private fun PedalboardNavigationWrapper(
             mainTitle = "Drums";
             subTitle = "Backing tracks"
         }
+        PedalboardRoute.TEST -> {
+            mainTitle = "Test page";
+            subTitle = "Experimental central"
+        }
     }
 
     Column(modifier = Modifier){
@@ -434,7 +438,6 @@ private fun PedalboardNavHost(
             )
         }
         composable(PedalboardRoute.EFFECTS) {
-            //EmptyComingSoon()
             PedalboardEffectsScreen(
                 contentType = contentType,
                 pedalboardHomeUIState = pedalboardHomeUIState,
@@ -452,6 +455,9 @@ private fun PedalboardNavHost(
             EmptyComingSoon()
         }
         composable(PedalboardRoute.DRUMS) {
+            EmptyComingSoon()
+        }
+        composable(PedalboardRoute.TEST) {
             EmptyComingSoon()
         }
     }

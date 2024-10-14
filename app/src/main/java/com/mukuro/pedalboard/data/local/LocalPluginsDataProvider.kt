@@ -6,6 +6,7 @@ import com.mukuro.pedalboard.data.Knob
 import com.mukuro.pedalboard.data.PluginElement
 import com.mukuro.pedalboard.data.Plugin
 import com.mukuro.pedalboard.data.PluginType
+import com.mukuro.pedalboard.data.Slider
 
 /**
  * A static data store of [Plugin]s.
@@ -21,7 +22,7 @@ object LocalPluginsDataProvider {
             name = "test Nayuta plugin",
             aspectRatio = 0.6f,
             elements = TestKnob.knobSet1,
-            coverDrawable = R.drawable.nayuta
+            //coverDrawable = R.drawable.nayuta
         ),
         Plugin(
             id = 2L,
@@ -29,7 +30,7 @@ object LocalPluginsDataProvider {
             name = "test chorus plugin",
             aspectRatio = 0.6f,
             elements = TestKnob.knobSet2,
-            coverDrawable = R.drawable.power
+            //coverDrawable = R.drawable.power
         ),
         Plugin(
             id = 3L,
@@ -47,7 +48,7 @@ object LocalPluginsDataProvider {
             name = "Amptweaker Small Form",
             aspectRatio = 0.581f,
             elements = TestKnob.knobSet1,
-            coverDrawable = R.drawable.anime_girl_3,
+            //coverDrawable = R.drawable.anime_girl_3,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -57,7 +58,7 @@ object LocalPluginsDataProvider {
             name = "Boss single switch",
             aspectRatio = 0.574f,
             elements = TestKnob.knobSet2,
-            coverDrawable = R.drawable.illustration_1,
+            //coverDrawable = R.drawable.illustration_1,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -67,7 +68,7 @@ object LocalPluginsDataProvider {
             name = "Boss double switch",
             aspectRatio = 1.088f,
             elements = TestKnob.knobSet3,
-            coverDrawable = R.drawable.makima,
+            //coverDrawable = R.drawable.makima,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -77,7 +78,7 @@ object LocalPluginsDataProvider {
             name = "DigiTech Whammy",
             aspectRatio = 0.839f,
             elements = TestKnob.knobSet2,
-            coverDrawable = R.drawable.frieren_1,
+            //coverDrawable = R.drawable.frieren_1,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -87,7 +88,7 @@ object LocalPluginsDataProvider {
             name = "EHX Big Muff",
             aspectRatio = 0.809f,
             elements = TestKnob.knobSet1,
-            coverDrawable = R.drawable.nayuta,
+            //coverDrawable = R.drawable.nayuta,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -97,7 +98,7 @@ object LocalPluginsDataProvider {
             name = "EHX Small Clone",
             aspectRatio = 0.647f,
             elements = TestKnob.knobSet2,
-            coverDrawable = R.drawable.madoka_2,
+            //coverDrawable = R.drawable.madoka_2,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -107,7 +108,7 @@ object LocalPluginsDataProvider {
             name = "Ibanez Tube Screamer Classic super duper long name",
             aspectRatio = 0.542f,
             elements = TestKnob.knobSet3,
-            coverDrawable = R.drawable.anime_girl_4,
+            //coverDrawable = R.drawable.anime_girl_4,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -117,7 +118,7 @@ object LocalPluginsDataProvider {
             name = "Line 6 Modeler Pedals",
             aspectRatio = 1.667f,
             elements = TestKnob.knobSet2,
-            coverDrawable = R.drawable.makima_6,
+            //coverDrawable = R.drawable.makima_6,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -127,7 +128,7 @@ object LocalPluginsDataProvider {
             name = "Small MXR Pedals",
             aspectRatio = 0.535f,
             elements = TestKnob.knobSet1,
-            coverDrawable = R.drawable.nayuta_1,
+            //coverDrawable = R.drawable.nayuta_1,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -137,7 +138,7 @@ object LocalPluginsDataProvider {
             name = "Morley Wah Pedals",
             aspectRatio = 1.553f,
             elements = TestKnob.knobSet3,
-            coverDrawable = R.drawable.madoka_1
+            //coverDrawable = R.drawable.madoka_1
         ),
         Plugin(
             id = 11L,
@@ -145,7 +146,7 @@ object LocalPluginsDataProvider {
             name = "ProCo Rat Two",
             aspectRatio = 0.875f,
             elements = TestKnob.knobSet2,
-            coverDrawable = R.drawable.makima_7,
+            //coverDrawable = R.drawable.makima_7,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -155,7 +156,7 @@ object LocalPluginsDataProvider {
             name = "Strymon Small Form",
             aspectRatio = 0.889f,
             elements = TestKnob.knobSet1,
-            coverDrawable = R.drawable.illustration_3
+            //coverDrawable = R.drawable.illustration_3
         ),
         Plugin(
             id = 13L,
@@ -163,7 +164,7 @@ object LocalPluginsDataProvider {
             name = "Strymon Large Form",
             aspectRatio = 1.324f,
             elements = TestKnob.knobSet3,
-            coverDrawable = R.drawable.illustration_2
+            //coverDrawable = R.drawable.illustration_2
         ),
         Plugin(
             id = 14L,
@@ -171,7 +172,7 @@ object LocalPluginsDataProvider {
             name = "TC Electronic Mini",
             aspectRatio = 0.514f,
             elements = TestKnob.knobSet2,
-            coverDrawable = R.drawable.bocchi_1,
+            //coverDrawable = R.drawable.bocchi_1,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -181,7 +182,7 @@ object LocalPluginsDataProvider {
             name = "TC Electronic Single Stomp",
             aspectRatio = 0.583f,
             elements = TestKnob.knobSet3,
-            coverDrawable = R.drawable.bocchi_2,
+            //coverDrawable = R.drawable.bocchi_2,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -191,7 +192,7 @@ object LocalPluginsDataProvider {
             name = "Way Huge",
             aspectRatio = 0.798f,
             elements = TestKnob.knobSet2,
-            coverDrawable = R.drawable.hutao_1,
+            //coverDrawable = R.drawable.hutao_1,
             horizontal = Arrangement.Center,
             vertical = Arrangement.Bottom
         ),
@@ -201,7 +202,7 @@ object LocalPluginsDataProvider {
             name = "Walrus Audio Large Form",
             aspectRatio = 1.217f,
             elements = TestKnob.knobSet2,
-            coverDrawable = R.drawable.crymachina_1
+            //coverDrawable = R.drawable.crymachina_1
         )
     )
 
@@ -258,7 +259,28 @@ object LocalPluginsDataProvider {
                 startPoint = 0f,
                 endPoint = 100f,
                 measure = "db"
-            )
+            ),
+            Slider(
+                id = 5,
+                name = "Drive",
+                startValue = 0f,
+                endValue = 100f,
+                measure = "db"
+            ),
+            Slider(
+                id = 6,
+                name = "Drive",
+                startValue = 0f,
+                endValue = 100f,
+                measure = "db"
+            ),
+            Knob(
+                id = 7,
+                name = "Overdrive",
+                startPoint = 0f,
+                endPoint = 100f,
+                measure = "db"
+            ),
 
         )
         val knobSet3 = listOf(
